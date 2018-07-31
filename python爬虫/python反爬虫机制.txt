@@ -1,0 +1,14 @@
+https://blog.csdn.net/fight_huang/article/details/74065346
+=======反爬虫机制======
+1、变更User-Agent
+1) 在middleware.py中添加User-Agent的中间件
+2) 在setting.py中利用random，每次启动随机启用一个User-Agent
+2、 在setting.py中设置ROBOTSTXT_OBEY = False
+3、在setting.py中设置 COOKIE_ENABLED = False
+4、设置ip代理
+在middleware.py中写一个中间件，获取IP地址
+5、在setting.py中设置DOWNLOAD_DELAY =10，减慢爬起速度
+========python爬虫技巧====
+1、理清网页地址的结构是否一致 ====做相应的分类
+2、理清网页的内容是否一致=====做相应的分类
+3、根据不同的类型，不同的页面内容，发起相应的请求
