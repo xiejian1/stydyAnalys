@@ -1,0 +1,67 @@
+======hadoop整合hive=======
+https://blog.csdn.net/kunshan_shenbin/article/details/52947065
+https://blog.csdn.net/cjfeii/article/details/49423459
+https://www.cnblogs.com/gispathfinder/p/9074992.html
+https://www.cnblogs.com/dxxblog/p/8193967.html
+===========hadoop+hive搭建======
+https://blog.csdn.net/u013412497/article/details/54914823
+======在hive-site.xml中添加内容====
+  --------------------------------------------
+<configuration>
+  <!-- WARNING!!! This file is auto generated for documentation purposes ONLY! -->
+  <!-- WARNING!!! Any changes you make to this file will be ignored by Hive.   -->
+  <!-- WARNING!!! You must make your changes in hive-site.xml instead.         -->
+  <!-- Hive Execution Parameters -->
+  <property>
+    <name>hive.exec.scratchdir</name>
+    <value>/usr/hive/tmp</value>
+    <description>HDFS root scratch dir for Hive jobs which gets created with write all (733) permission. For each connecting user, an HDFS scratch dir: ${hive.exec.scratchdir}/<username> is created, with ${hive.scratch.dir.permission}.</description>
+  </property>
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/usr/hive/warehouse</value>
+    <description>location of default database for the warehouse</description>
+  </property>
+<property>
+    <name>hive.querylog.location</name>
+    <value>/usr/hive/log</value>
+    <description>Location of Hive run time structured log file</description>
+  </property>
+ <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://192.168.32.128:3306/hive?createDatabaseIfNotExist=true&characterEncoding=UTF-8&useSSL=false</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>root</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>root</value>
+  </property>
+</configuration>
+======配置hive-env.sh文件============
+#定位
+cd /usr/local/hive/conf
+#生成hive-env.sh文件
+cp -r hive-env.sh.template hive-env.sh
+#配置
+vi hive-env.sh
+--------------------------------------------
+# Folder containing extra ibraries required for hive compilation/execution can be controlled by:
+# export HIVE_AUX_JARS_PATH=
+ 
+export JAVA_HOME=/usr/local/jdk
+export HADOOP_HOME=/usr/local/hadoop
+export HIVE_HOME=/usr/local/hive
+# HADOOP_HOME=${bin}/../../hadoop
+ 
+# Hive Configuration Directory can be controlled by:
+export HIVE_CONF_DIR=$HIVE_HOME/conf
+ 
+# Folder containing extra ibraries required for hive compilation/execution can be controlled by:
+export HIVE_AUX_JARS_PATH=/usr/local/hive/lib/*

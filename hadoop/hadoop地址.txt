@@ -1,2 +1,186 @@
 =======Ambari安装======
 https://blog.csdn.net/yyoc97/article/details/79658378
+https://blog.csdn.net/code_better/article/details/74505568
+http://www.voidcn.com/article/p-nxtxngvc-bpy.html
+https://www.cnblogs.com/lzxlfly/p/7221890.html
+
+
+====hadoop搭建部署====
+https://blog.csdn.net/pucao_cug/article/details/72353701
+====spark单机部署=====
+http://blog.csdn.net/pucao_cug/article/details/72377219
+======scala搭建=======
+http://blog.csdn.net/pucao_cug/article/details/72353701
+vim /etc/profile
+export HADOOP_HOME=/home/hadoop/hadoop2.8
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
+export PATH=.:${JAVA_HOME}/bin:${HADOOP_HOME}/bin:$PATH
+新建一些文件夹
+mkdir  /root/hadoop  
+mkdir  /root/hadoop/tmp  
+mkdir  /root/hadoop/var  
+mkdir  /root/hadoop/dfs  
+mkdir  /root/hadoop/dfs/name  
+mkdir  /root/hadoop/dfs/data
+=======修改core-site.xml===== 
+<configuration>
+<property>
+        <name>hadoop.tmp.dir</name>
+        <value>/root/hadoop/tmp</value>
+        <description>Abase for other temporary directories.</description>
+   </property>
+   <property>
+        <name>fs.default.name</name>
+        <value>hdfs://test1:9000</value>
+   </property>
+</configuration>
+======修改hadoop-env.sh=====
+添加
+export   JAVA_HOME=/home/java/jdk1.8
+======修改hdfs-site.xml=====
+<property>
+   <name>dfs.name.dir</name>
+   <value>/root/hadoop/dfs/name</value>
+   <description>Path on the local filesystem where theNameNode stores the namespace and transactions logs persistently.</description>
+</property>
+<property>
+   <name>dfs.data.dir</name>
+   <value>/root/hadoop/dfs/data</value>
+   <description>Comma separated list of paths on the localfilesystem of a DataNode where it should store its blocks.</description>
+</property>
+<property>
+   <name>dfs.replication</name>
+   <value>2</value>
+</property>
+<property>
+      <name>dfs.permissions</name>
+      <value>false</value>
+      <description>need not permissions</description>
+</property>
+=======修改pamred-site.xml======
+添加
+<property>
+    <name>mapred.job.tracker</name>
+    <value>test1:9001</value>
+</property>
+<property>
+      <name>mapred.local.dir</name>
+       <value>/root/hadoop/var</value>
+</property>
+<property>
+       <name>mapreduce.framework.name</name>
+       <value>yarn</value>
+</property>
+======初始化hadoop=====
+  ./hadoop  namenode  -format
+/home/xqiang/jdk/jdk1.8.0_141
+/home/xqiang/hadoop/hadoop2.7
+/home/xqiang/hadoop/tmp
+/home/xqiang/hadoop/dfs/data
+/home/xqiang/hadoop/dfs/name
+/home/xqiang/hadoop/var
+/home/xqiang/scala/scala-2.12.6
+/home/xqiang/spark/spark-2.2.0
+/home/xqiang/HBase/hbase-1.4.0
+/home/xqiang/hadoop/hadoop-2.7.4/etc/hadoop
+JAVA_HOME=/home/xqiang/jdk/jdk1.8.0_141
+/home/xqiang/hadoop/zookeeper/log
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH
+
+#hadoop configuratin
+export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+
+
+=====spark环境单搭建======
+下载spark-bin-hadoop
+=====spark-defaults.conf配置===
+spark.master=local
+#这里表示启动模式是yarn-client，也可以启动在yarn-cluster，或者本地模式：local（一般只用在本地测试）
+#前两种最直观的区别是，你本机关闭后，整个程序关闭，yarn-cluster是，提交后，本机关闭， 程序照样在跑
+=====spark-env.sh配置==========
+export HADOOP_CONF_DIR=/home/orco/resources/hadoop-2.7.3/etc/hadoop
+#只需要配置这个，其余默认即可
+=====spark historyserver配置与启动====
+在Hadoop配置文件yarn-site.xml增加以下配置
+<property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+</property>
+<property>
+        <name>yarn.log.server.url</name>
+        <value>http://node2:19888/jobhistory/logs</value>
+</property>
+<property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+</property>
+<property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+</property>
+========在Hadoop配置文件mapred-site.xml增加以下配置====
+<property>
+<name>mapreduce.jobhistory.done-dir</name>
+<value>/user/history/done</value>
+</property>
+<property>
+<name>mapreduce.jobhistory.intermediate-done-dir</name>
+<value>/user/history/done_intermediate</value>
+</property>
+======修改conf/spark-defaults.conf ，增加以下配置===
+#告诉yarn，spark的historyserver地址
+spark.yarn.historyServer.address=node1:18080
+#剩下几个是跟sparkhistory相关的一些配置
+spark.history.ui.port=18080
+spark.eventLog.enabled=true
+spark.eventLog.dir=hdfs:///tmp/spark/events
+spark.history.fs.logDirectory=hdfs:///tmp/spark/events
+
+====hbase搭建====
+1、安装hbase配置环境变量
+2、配置hbase-env.sh
+export JAVA_HOME=/opt/java_environment/jdk1.7.0_80（jdk安装路径）
+去掉注释 # export  HBASE_MANAGES_ZK=true，使用hbase自带zookeeper。
+3、配置hbase-site.xml
+<property> 
+　　　　　　　　<name>hbase.rootdir</name> <!-- hbase存放数据目录 -->
+　　　　　　　　<value>hdfs://master:9000/opt/hbase/hbase_db</value>
+
+　　　　　　　　　　<!-- 端口要和Hadoop的fs.defaultFS端口一致-->
+　　　　　　</property> 
+　　　　　　<property> 
+　　　　　　　　<name>hbase.cluster.distributed</name> <!-- 是否分布式部署 -->
+　　　　　　　　<value>true</value> 
+　　　　　　</property> 
+　　　　　　<property> 
+　　　　　　　　<name>hbase.zookeeper.quorum</name> <!-- list of  zookooper -->
+　　　　　　　　<value>master,slave1,slave2</value> 
+　　　　　　</property> 　　　 
+
+　　　　　　　<property><!--zookooper配置、日志等的存储位置 -->
+　　　　　　　　　　<name>hbase.zookeeper.property.dataDir</name> 
+　　　　　　　　　　<value>/opt/hbase/zookeeper</value>
+　　　　　　　</property>
+
+
+============hadoop集群搭建========
+1、3台服务器1台matser(namenode) 2台datanode
+2、在hosts中配置ip地址,在hostname中配置name
+3、生成ssh key ssh-keygen  -t   rsa   -P  ''
+4、将key 秘钥授权 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+5、scp key秘钥文件复制到其他文件
+6、安装jdk 配置环境变量
+7、安装scala 配置环境变量
+8、安装hadoop 配置环境变量
+1） 配置core-site.xml 文件
+2） 配置hdfs-site.xml文件
+3） 配置mapred-site.xml文件
+4） 配置yarn-site.xml文件
+9、安装spark,配置环境变量
+1）配置spark-evn.sh 文件
+2）配置slaves文件
+=====hadoop整合HBase====
+1、安装HBase 配置环境变量
+2、配置 hbase-site.xml文件
+3、配置hbase-env.sh文件

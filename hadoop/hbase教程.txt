@@ -1,0 +1,6 @@
+=======hbase教程======
+https://blog.csdn.net/yuan_xw/article/details/51555228
+=======hive教程=======
+https://blog.csdn.net/yuan_xw/article/details/78197917
+https://blog.csdn.net/trigl/article/details/61418571
+https://www.yiibai.com/hive/
