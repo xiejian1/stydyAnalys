@@ -11,6 +11,9 @@ https://blog.csdn.net/pucao_cug/article/details/72353701
 http://blog.csdn.net/pucao_cug/article/details/72377219
 ======scala搭建=======
 http://blog.csdn.net/pucao_cug/article/details/72353701
+=======================================================
+=======hadoop集群安装======
+https://www.cnblogs.com/charlesblc/p/6014158.html
 vim /etc/profile
 export HADOOP_HOME=/home/hadoop/hadoop2.8
 export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
@@ -75,7 +78,7 @@ export   JAVA_HOME=/home/java/jdk1.8
 ======初始化hadoop=====
   ./hadoop  namenode  -format
 /home/xqiang/jdk/jdk1.8.0_141
-/home/xqiang/hadoop/hadoop2.7
+/home/xqiang/hadoop/hadoop-2.7.4
 /home/xqiang/hadoop/tmp
 /home/xqiang/hadoop/dfs/data
 /home/xqiang/hadoop/dfs/name
