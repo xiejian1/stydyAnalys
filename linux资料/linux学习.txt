@@ -1,0 +1,152 @@
+JAVA_HOME=/home/jdk/jdk1.8.0_141
+PATH=$JAVA_HOME/bin:$PATH
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export JAVA_HOME
+export PATH
+export CLASSPATH
+
+1、解码命令
+tar -zxvf 
+2、开放端口命令
+iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+3、防火墙查看开放端口
+iptables -L -n
+4、防火墙查看状态
+iptables status
+5、linux 安装redis数据库
+1) 安装一下软件
+yum install cpp  
+yum install binutils
+yum install glibc-kernheaders
+yum install glibc-common
+yum install glibc-devel
+yum install gcc
+yum install make   
+6、linux创建用户、设置密码
+1）设置密码 passwd 用户名   
+2) adduser username 
+7、删除目录
+rmdir dirname
+8、查看文件的内容
+cat 
+9、输出文件最后N行内容
+tail -n N 
+10、打印内容
+less more按页或者窗口打印内容
+11、在给定的文件中搜索制定的字符串
+grep "" dirname
+12、在给定的位置搜寻与条件匹配的文件
+find -name ---进行区分
+find / -name "name" --按文件名查找
+find /etc -size 8  --按文件大小查找
+find /var -type d -print --按文件类型查找
+find . -cmin -5 --按文件修改的时间查找
+find dirname -perm 755  --按文件的权限查找
+find . -size 0 -exec rm {} \; --处理查找到的文件
+find . \(-type f -or -type l \) -ok rm{}\;
+13、创建、查看和提取tar压缩文件
+tar -cvf --创建对应压缩文件
+tar -tvf --查看对应压缩文件
+tar -xvf --提取对应压缩文件
+13、创建或提取对应的gzip文件
+gzip -d --提取对应的gzip压缩文件
+14、解压gzip文件
+ugzip 
+15、help --列出所有的可用命令
+16、whatis --用单行来描述给定的命令
+17、man  --为给定的命令显示一个手册页面
+18、who --列出当前登录的用户
+19 显示系统的重要信息
+uname -a  
+20、显示系统的空闲内存，已经占用内存，可利用的交换内存
+free -m --将结果中的单位转换成kb
+free -g  --将结果转化成Gb
+21、查看文件系统磁盘的使用情况-硬盘已用，可用的存储空间，以及其他存储设备
+df -h
+22、按照CPU的占用情况，显示占用量较大的进程
+top -u --查看某个用户的CPU使用情况
+
+
+
+
+==============用户，组管理命令=========
+1、创建组账号
+groupadd groupname
+groupadd -g number groupname --创建账号并设置Gid
+2、创建用户账号
+useradd username --创建用户账号
+useradd -u number -g groupid -G groupID -d /home name  --创建用户，-u为用户指定UID号，-g 指定用的组,-d指定用户的目录
+3、删除用户
+userdel name
+userdel -r name --删除用户并删除目录
+4、删除用户组
+groupdel 
+5、用户密码
+passwd -l username --禁止用户登录
+passwd -u username --恢复用户登录
+passwd -d username --删除用户口令
+usermod -u 600 -g 500 username --修改用户的信息
+=============文件属性的操作==========
+1、chown username filename --指定文件的属主
+chown -r username filename --递归该文件的属主
+2、chgrp groupname filename --改变文件的属主
+chgrp -R groupname filename
+3、chmod --修改文件的权限
+
+========文本的提取===================
+1、按特定的分隔符提取指定的字段
+cut -d: -f1 /etc/passwd   --提取/etc/passwd文件中以：为分隔符的第一个字段
+cut -c1-3,5 /etc/passwd   --提取/etc/passswd文件中每行的第1-3列和第五列
+
+========挂装与卸载命令=============
+mount -t iso9660 /dev/cdrom  /mnt/cdrom  --将文件系统类型为iso9660的光盘挂在到/mnt/cdrom目录下
+mount -t vfat /dev/sda1 /mnt/myusb  --将文件类型为vfat的优盘挂载到/mnt/myusb目录下
+
+fdisk -l --列出能够识别出来的分区
+mount -t msdos /dev/fd0  /mnt/floppy --将软盘挂载到/mnt/floppy下
+umonut   --卸载已挂装的文件系统
+
+========网卡配置命令============
+ifconfig eth0 192.168.0.100 netmask 255.255.255.0  --设置网卡的地址，子网掩码
+ifconfig eth0 down --禁用网卡
+ifconfig --激活网卡
+
+====rpm命令===========
+1) rpm -qa --查询系统中安装的软件包列表
+-q --查询
+-a --所有
+2) rpm  -ql  --查询已安装的软件包中的列表
+-l   --列出指定软件包中的列表
+3）rpm -e --卸载指定的软件包
+-e  --卸载
+4）rpm   -ivh  --
+-i  --安装
+-v  --版本,显示处理过程
+-f  --显示‘#’表示进度
+-force --强制
+
+======定时器命令=====
+1）at 命令
+at 9:50 --一次性执行某项任务
+2) at now +3 week -day -year
+---在指定的日期特定的时刻执行任务
+3) at -l --查看at任务列表
+4) atrm number --删除at任务中特定的任务
+5) crontab -l--查看任务列表
+6) crontab -e 编辑reneu列表
+分 时 日 月 星期 
+10 2   *  *  *  -*表示任意
+0  8-17/2 *  5  -每个星期五8-17时，每隔2小时执行一次
+
+======管道与重定向=======
+1)重定向  '|' --把前一个命令的输出当做后一个命令的输入
+2) 输出重定向  > --覆盖方式
+               >> --追加方式，如果文件存在，则在末尾追加
+3) 输入重定向  <
+               <<
+
+======linux网络安全========
+iptables 
+selinux 
+smack 
+ecryptfs
