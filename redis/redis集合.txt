@@ -1,0 +1,17 @@
+=========集合set=======
+集合成员是唯一的，不能出现重复的数据，通过hash表实现的 添加，删除，查找复杂度都是O(1)
+sadd list value ==向集合中添加一个成员
+scard list===获取集合的成员数
+sdiff list1 list2 ==返回给定集合的差集
+sdiffstore destination key1 key2 
+sinter list1 list2 ==返回给定所有集合的交集
+sinterstore destination key1 key2 ==返回给定所有集合的交集，并存储在destination中
+sismember list value ==判断member元素是否是集合list的元素
+smembers list ==返回集合中所有的成员
+smove source destination value ==将member元素从source集合移动到destination集合
+spop list ==移除并返回集合中的一个元素
+srandmember list count ==返回集合中一个或多个随机数
+srem list value1 value2 ==移除集合中一个或多个成员
+suinon list1 list2 ==返回所有给定集合的并集
+sunionstore destination list1 list2 ==所有给定集合的并集存储在destination中
+sscan list cursor ==迭代集合中的元素

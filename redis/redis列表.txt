@@ -1,0 +1,19 @@
+===========列表list======
+lpush list 'value' ==将值添加到头部
+rpush list 'value' ==将值添加到列表尾部
+lpushx list value ==将一个值插入到已存在的列表头部
+rpushx list value ==同上
+===========list移除元素===
+blpop key timeout ==移除获取到列表的第一个元素
+brpop key timeout ==移除获取到列表的最后一个元素
+brpoplpush source destination timeout ==将一个元素从一个列表移除添加到另一个列表
+lrem key count value ==移除列表元素
+===========list索引=======
+lindex key index ==通过索引获取列表中的长度
+linsert key before|after list value ==在列表的元素前或者元素后插入值
+llen key ==获取列表的长度
+==========list范围值=======
+lrange key start end ==获取列表指定范围的值
+==========list值修改=======
+lset list key value ==通过索引，修改列表元素的值
+ltrim list start stop ==对一个列表进行修剪，保留指定区的元素
