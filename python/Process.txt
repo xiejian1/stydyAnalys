@@ -1,0 +1,19 @@
+=======Process进程======
+1、由于fork创建进程不能再windows系统上使用，所以产生了multiprocessing.Process
+2、Process可以直接实例化然后用start调用，需要指定新的进程执行的函数，用元组的方式传递参数
+3、进程对象的join方法会让主线程阻塞，直到子进程执行结束才往下执行，timeout参数可以指定超时时间
+4、Process实现的进程，主进程会等所有子进程执行完毕之后才关闭
+5、类似Java多线程实现方式，继承Process类，重写run方法，然后实例化，再掉start方法
+def test(arg):
+    print(arg)
+    time.sleep(4)
+    print("the process %s is executing "%os.getpid())
+p1 = Process(target=test, args=("haha",))  # 以元组的形式传递参数
+p1.start()
+p1.join(timeout=2)  # 子进程执行结束之后主进程才继续往下执行
+# timeout设置超时时间 超过这个时间如果子进程还没结束 主进程将继续执行
+# p1.terminate()  # 杀死p1进程
+=======线程thread=========
+t1 = threading.Thread(target=Music,args=('FILL ME',))
+t2 = threading.Thread(target=Blog,args=('',))
+t1.start()

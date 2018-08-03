@@ -1,0 +1,3 @@
+========random包=======
+1、random.randint(1,10) ==随机生成整型数字
+2、random.choice(list)  ==随机选择一个

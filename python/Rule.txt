@@ -1,0 +1,14 @@
+=============scrapy Rule规则=====
+Link Extractors 是那些目的仅仅是从网页中抽取最终会被follow的对象
+Scrapy 提供2种可用的Link Extractor ,实现一个简单的接口创建自己定制的Link Extractor。
+LinkExtractor 有唯一的公共方法extractor_links 接收一个Rsponse对象,返回一个scrapy.link.Link对象
+LinkExtractor在CrawlSpider类中使用
+======目的是提取链接
+这个Rule啊其实就是为了爬取全站内容的写法
+allow：这里用的是re过滤，我们其实就是start_urls加上我们这个匹配到的具体链接下的内容。 　 
+LinkExtractor：故名思议就是链接的筛选器，首先筛选出来我们需要爬取的链接。
+deny：这个参数跟上面的参数刚好想反，定义我们不想爬取的链接。
+follow：默认是false，爬取和start_url符合的url。如果是True的话，就是爬取页面内容所有的以start_urls开头的url。
+restrict_xpaths：使用xpath表达式，和allow共同作用过滤链接。还有一个类似的restrict_css 
+callback：定义我们拿到可以爬取到的url后，要执行的方法，并传入每个链接的response内容（也就是网页内容）
+
