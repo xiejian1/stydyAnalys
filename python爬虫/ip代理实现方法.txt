@@ -1,0 +1,164 @@
+dont_filter=False
+scrapy的代理其实设置起来很简单。
+注意，request.meta['proxy']=代理ip的API
+===========自动更新ip池=======
+1、自动获取IP的类proxies.py，把获取的ip保存到txt文件中去
+===========编写ip代理proxies.py===
+class Proxies(object):
+"""docstring for Proxies"""
+def __init__(self, page=3):
+self.proxies = []
+self.verify_pro = []
+self.page = page
+self.headers = {
+'Accept': '*/*',
+'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',
+'Accept-Encoding': 'gzip, deflate, sdch',
+'Accept-Language': 'zh-CN,zh;q=0.8'
+}
+self.get_proxies()
+self.get_proxies_nn()
+def get_proxies(self):
+page = random.randint(1,10)
+page_stop = page + self.page
+while page < page_stop:
+url = 'http://www.xicidaili.com/nt/%d' % page
+html = requests.get(url, headers=self.headers).content
+soup = BeautifulSoup(html, 'lxml')
+ip_list = soup.find(id='ip_list')
+for odd in ip_list.find_all(class_='odd'):
+protocol = odd.find_all('td')[5].get_text().lower()+'://'
+self.proxies.append(protocol + ':'.join([x.get_text() for x in odd.find_all('td')[1:3]]))
+page += 1
+def get_proxies_nn(self):
+page = random.randint(1,10)
+page_stop = page + self.page
+while page < page_stop:
+url = 'http://www.xicidaili.com/nn/%d' % page
+html = requests.get(url, headers=self.headers).content
+soup = BeautifulSoup(html, 'lxml')
+ip_list = soup.find(id='ip_list')
+for odd in ip_list.find_all(class_='odd'):
+protocol = odd.find_all('td')[5].get_text().lower() + '://'
+self.proxies.append(protocol + ':'.join([x.get_text() for x in odd.find_all('td')[1:3]]))
+page += 1
+def verify_proxies(self):
+# 没验证的代理
+old_queue = Queue()
+# 验证后的代理
+new_queue = Queue()
+print ('verify proxy........')
+works = []
+for _ in range(15):
+works.append(Process(target=self.verify_one_proxy, args=(old_queue,new_queue)))
+for work in works:
+work.start()
+for proxy in self.proxies:
+old_queue.put(proxy)
+for work in works:
+old_queue.put(0)
+for work in works:
+work.join()
+self.proxies = []
+while 1:
+try:
+self.proxies.append(new_queue.get(timeout=1))
+except:
+break
+print ('verify_proxies done!')
+def verify_one_proxy(self, old_queue, new_queue):
+while 1:
+proxy = old_queue.get()
+if proxy == 0:break
+protocol = 'https' if 'https' in proxy else 'http'
+proxies = {protocol: proxy}
+try:
+if requests.get('http://www.baidu.com', proxies=proxies, timeout=2).status_code == 200:
+print ('success %s' % proxy)
+new_queue.put(proxy)
+except:
+print ('fail %s' % proxy)
+if __name__ == '__main__':
+a = Proxies()
+a.verify_proxies()
+print (a.proxies)
+proxie = a.proxies
+with open('proxies.txt', 'a') as f:
+for proxy in proxie:
+f.write(proxy+'/n') 
+==========配置代理文件middlewares.py的内容======
+class ProxyMiddleWare(object):
+"""docstring for ProxyMiddleWare"""
+def process_request(self,request, spider):
+'''对request对象加上proxy'''
+proxy = self.get_random_proxy()
+print("this is request ip:"+proxy)
+request.meta['proxy'] = proxy
+def process_response(self, request, response, spider):
+'''对返回的response处理'''
+# 如果返回的response状态不是200,重新生成当前request对象
+if response.status != 200:
+proxy = self.get_random_proxy()
+print("this is response ip:"+proxy)
+# 对当前reque加上代理
+request.meta['proxy'] = proxy
+return request
+return response
+def get_random_proxy(self):
+'''随机从文件中读取proxy'''
+while 1:
+with open('G://Scrapy_work//myproxies//myproxies//proxies.txt', 'r') as f:
+proxies = f.readlines()
+if proxies:
+break
+else:
+time.sleep(1)
+proxy = random.choice(proxies).strip()
+return proxy 
+问题一:在def process_request(self,request,response) 中request添加request.meta['proxy'] = proxy_ip
+问题二:在def process_response(self,request,response)中response判断response.status,如果不等于200，重新发送请求request
+==========在setting中添加上代理的组件========
+DOWNLOADER_MIDDLEWARES = {
+#'myproxies.middlewares.MyCustomDownloaderMiddleware': 543,
+'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':None,
+'myproxies.middlewares.ProxyMiddleWare':125,
+'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware':None
+} 
+=============使用crawlera作为ip代理===========
+1、中文文档 http://doc.scrapinghub.com/crawlera.html 
+2、安装scrapy-crawlera
+pip install scrapy-crawlera
+3、修改settings.py  如果你之前设置过代理ip,那么请注释掉,加入crawlera的代理,
+4、添加api信息
+CRAWLERA_ENABLED = True
+CRAWLERA_USER = '<API key>'
+CRAWLERA_PASS = '' 
+为了达到更高的抓取效率,可以禁用Autothrottle扩展和增加并发请求的最大数量,
+以及设置下载超时,代码如下
+CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS_PER_DOMAIN = 32
+AUTOTHROTTLE_ENABLED = False
+DOWNLOAD_TIMEOUT = 600
+如果在代码中设置有 DOWNLOAD_DELAY的话,需要在settings.py中添加
+CRAWLERA_PRESERVE_DELAY = True 
+如果你的spider中保留了cookies,那么需要在Headr中添加
+DEFAULT_REQUEST_HEADERS = {
+# 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+# 'Accept-Language': 'zh-CN,zh;q=0.8',
+'X-Crawlera-Cookies': 'disable'
+} 
+============手动更新ip代理地址======
+1、在settings.py中新增IP地址池
+ippool = []
+在Scrapy中与代理服务器设置相关的下载中间件是HttpProxyMiddleware,对应的类为:
+scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware
+2.修改中间件文件middlewares.py
+thisip=random.choice(IPPOOL)
+print("this is ip:"+thisip["ipaddr"])
+request.meta["proxy"]="http://"+thisip["ipaddr"]
+3.在settings中设置DOWNLOADER_MIDDLEWARES
+DOWNLOADER_MIDDLEWARES = {
+#'myproxies.middlewares.MyCustomDownloaderMiddleware': 543,
+'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':543,
+'myproxies.middlewares.MyproxiesSpiderMiddleware':125
+} 

@@ -1,0 +1,39 @@
+==========带登录验证的scrapy爬虫=========
+https://www.cnblogs.com/GarfieldEr007/p/5746296.html
+https://www.jb51.net/article/77100.htm
+https://www.jb51.net/article/86006.htm
+=========python opencv图像处理===========
+https://blog.csdn.net/dcrmg/article/details/78817660
+http://python.jobbole.com/85254/
+https://blog.csdn.net/JohinieLi/article/details/69389980?locationNum=11&fps=1
+1、设置头文件
+headers={
+        "GET /index.php HTTP/1.1"
+        "Host": "91.91p17.space",
+        "Connection": "keep-alive",
+        "Cache-Control": "max-age=0",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        "Referer": "http://91.91p17.space/login.php",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept-Language": "zh-CN,zh;q=0.8"
+    }
+meta={"cookiejar":1})
+2、取到图片的src地址，将图片保存在本地
+opener=urllib.request.build_opener()
+opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+urllib.request.install_opener(opener)
+urllib.request.urlretrieve(urljoin("http://91.91p17.space", captcha_image[0]), localpath)
+3、解析图片，拿到数值
+captcha_value = input()
+            data = {
+                "username": "这里填用户名",
+                "password": "这里填密码",
+                "fingerprint": "1838373130",
+                "fingerprint2": "1a694ef42547498d2142328d89e38c22",
+                "captcha_input": captcha_value,
+                "action_login": "Log In",
+                "x": "54",
+                "y": "21"
+            }

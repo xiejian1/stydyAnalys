@@ -1,4 +1,11 @@
 https://blog.csdn.net/fight_huang/article/details/74065346
+https://segmentfault.com/a/1190000011494059
+http://www.shuang0420.com/2016/06/17/%E7%88%AC%E8%99%AB%E6%80%BB%E7%BB%93-%E5%9B%9B-%E5%88%86%E5%B8%83%E5%BC%8F%E7%88%AC%E8%99%AB/
+https://www.pythontab.com/html/2018/pythonhexinbiancheng_0301/1249.html
+https://github.com/jhao104/proxy_pool
+==========ip代理=======
+https://blog.csdn.net/demohui/article/details/77370313
+https://www.aliyun.com/jiaocheng/433873.html
 =======反爬虫机制======
 1、变更User-Agent
 1) 在middleware.py中添加User-Agent的中间件
@@ -8,7 +15,9 @@ https://blog.csdn.net/fight_huang/article/details/74065346
 4、设置ip代理
 在middleware.py中写一个中间件，获取IP地址
 5、在setting.py中设置DOWNLOAD_DELAY =10，减慢爬起速度
+6、爬去的时候，放慢爬取的速度，防止被封号
 ========python爬虫技巧====
 1、理清网页地址的结构是否一致 ====做相应的分类
 2、理清网页的内容是否一致=====做相应的分类
 3、根据不同的类型，不同的页面内容，发起相应的请求
+
