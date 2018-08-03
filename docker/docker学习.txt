@@ -1,0 +1,80 @@
+1、image镜像 container容器 resipotory仓库
+1) iamge 就相当于一个类class container就相当于一个对象 resipotory就相当于一个代码控制仓库
+2、rootfs 根文件系统 bootfs启动文件系统
+3、docker启动container的命令run 指定一个image(镜像来作为文件系统)
+4、docker使用aufs来实现分层的文件系统管理
+5、只读部分为image 可写部分为container
+6、image类似于一个单链表系统，每个image包含一个指向parent image的指针
+7、没有parent image的image是一个base image(操作系统linux centos)
+8、下载镜像docker pull{Image name}
+9、把container通过docker commit的命令转化成一个Image镜像
+10、通过docker tag 来命名新生成的image
+11、docker push 到docker hub中
+12、docker login 登录到docker hub中
+13、使用link来连接两个容器(container)
+通过link参数，把container的端口信息暴露到另一个container中，实现contianer键的通信
+14、Volume共享文件系统
+15、运行一个container就相当于开启一个具有独立进程
+16、-d container运行在后台 -a container运行在前台
+17、attach 重新生成一个后台运行的container
+18、docker ps 查看运行信息
+19、可以通过name来命名container的名字
+20、docker inspect获取更多的docker信息
+21、docker logs 查看日志
+22、docker使用bridge的方式实现container之间的通信
+23、通过net来修改网络设置
+24、none表示网络的连接
+25、host主机的网络
+26、-p 暴露container内部的端口 -p:3306
+27、-v 把host上的一个目录绑定到container中，允许container对其进行读写
+28、通过build指令来构建image docker build imagename <path
+29、dockerfile FROM 从base image开始执行
+30、ONBUILD作为一个trigger的标记
+==============分布式集群docker==============
+1、cubernate技术
+2、docker image ls  ===列出所有的image文件
+3、docker image rm [iamgename] ==删除image文件
+4、docker iamge pull library/hello world  ==将image文件从仓库抓取到本地
+5、docker container run imagename ==运行iamge文件
+6、docker container run -it ubuntu bash ==不会终止的服务
+7、docker container kill [containid]  ==手动终止
+8、docker container ls ==列出本机正在运行的容器
+9、docker container ls --all ==列出本机所有容器，包括终止运行的容器
+10、docker container kill [containID]
+11、docker container rm [containID]  删除容器 
+=======dockerfile文件======
+1、生成image文件
+2、1)编写.dockerignore文件夹
+    .git
+    node_modules
+    npm-debug.log
+  表示这三个路径要排除,如果没有的haul，可以不排除
+    2)编写dockerfile
+    FROM node:8.4   ==该文件继承官方node image，冒号表示标签，标签就是8.4
+    COPY ./app   ==将当前目录下的所有文件，都拷贝进image文件的/app目录
+    WORKDIR /app ==指定接下来的工作路径
+    RUN npm install --registry-https://registry.npm.taobao.org  ==运行npm install 命令安装依赖
+    EXPOSE 3000  ==将容器3000端口暴露出来
+    CMD node 
+3、创建image文件
+docker image build -t imagename . ==-t参数指定image文件的名字
+4、生成容器
+docker container run -p 8000:3000 -it imagename /bash/bin 
+docker container run -p 8000:3000 -it imagename:icon /bash/bin
+-p参数，容器的3000端口映射到本机的8000端口
+-it参数,容器的shell，映射到当前的shell,
+/bin/bash ==容器启动以后，内部第一个执行的命令
+CMD 在容器启动后执行，RUN 在image文件的构建阶段执行，执行结果会打包进入image文件，一个dockerf
+ile可以包含多个RUN命令，只能有一个CMD命令
+5、发布image命令
+docker image build -t [username]/[repository]:[tag]
+#不用标签
+docker image build -t [username]/[repository]:[tag]
+6、发布Image文件
+docker image push [username]/[repository]:[tag]
+=====有用的命令=====
+1、docker container start [containID] ==重复使用容器
+2、docker container stop ==终止容器运行
+3、docker container logs ==查看docker容器的输出
+4、docker container exec ==进入一个正在运行的容器
+5、docker container cp ==从正在运行的docker容器里面，将文件拷贝到本机
