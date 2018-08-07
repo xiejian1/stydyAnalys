@@ -1,0 +1,13 @@
+========python文件读取=========
+python将在当前路径下寻找文件
+相对路径去寻找文件
+绝对路径寻找文件
+1、函数
+with open('./filepath','a') as f:
+ f.read() ==读取所有的内容
+========读取一行文件===========
+ f.readlines() ==读取一行内容
+ str.rstrip() ==去掉右边的空格
+========将数据写入文件=========
+with open("filepath",'w') as f:  ==文件已经存在，python将清空内容
+  f.write("str")  ==将内容写入文件

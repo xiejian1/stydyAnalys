@@ -1,0 +1,97 @@
+======pandas处理文件=========
+pandas.read_excel("filepath")
+======pandas数据处理=========
+1、规整
+1）分层索引
+2）合并连接
+3）重塑透视
+2、清洗准备
+1）数据缺失处理
+2）数据转换
+去重
+映射
+替代
+离散化
+过滤
+抽样
+=====pandas分析建模======
+预处理
+模型选择
+维度下降
+分类
+回归
+聚类
+Statsmodels    ==估计统一模型和执行统计测试
+Scikit-learn  ==机器学习库
+
+=====python数据可视化======
+matplotlib
+=====pandas数据结构========
+Series和DataFrame
+一、
+Series 是一个带有 名称 和索引的一维数组，既然是数组，肯定要说到的就是数组中的元素类型，在 Series 中包含的数据类型可以是整数、浮点、字符串、Python对象等。
+一个 Series 包括了 data、index 以及 name。
+二、 ======pandas操作数据=====
+import pandas as od 
+data = pd.Series(data=[],index=[])
+=====给Series建立索引=======
+data.index = []   ==长度与data保持一致
+======给索引命名======
+data.index.name = ""
+======给Series起名字=====
+data.name = ""
+
+=====Series有dict字典的性质，index相当于dict的key值=====
+data["Tom"] 
+=====Series有array列表的性质，因此可以使用列表的操作====
+data[0]
+data[:3]  ==切片=====
+# 获取年龄大于30的元素
+user_age[user_age > 30]
+user_age[[3, 1]]
+======Series量化操作=======
+Series 与 ndarray 一样，也是支持向量化操作的。同时也可以传递给大多数期望 ndarray 的 NumPy 方法。
+user_age + 1
+
+==========DataFrame操作=============
+DataFrame 是一个带有索引的二维数据结构，每列可以有自己的名字，并且可以有不同的数据类型。
+你可以把它想象成一个 excel 表格或者数据库中的一张表，DataFrame 是最常用的 Pandas 对象。
+可以构建一个 dict，key 是需要存储的信息，value 是信息列表。然后将 dict 传递给 data 参数。
+==========DataFrame操作======
+index = pd.Index(data=["Tom", "Bob", "Mary", "James"], name="name")
+data = {
+    "age": [18, 30, 25, 40],
+    "city": ["BeiJing", "ShangHai", "GuangZhou", "ShenZhen"]
+}
+user_info = pd.DataFrame(data=data, index=index)
+
+=========通过另外一种方式构建dataFrame=======
+index = pd.Index(data=["Tom", "Bob", "Mary", "James"], name="name")
+data = [[18, "BeiJing"], 
+        [30, "ShangHai"], 
+        [25, "GuangZhou"], 
+        [40, "ShenZhen"]]
+columns = ["age", "city"]
+user_info = pd.DataFrame(data=data, index=index, columns=columns)
+======dataFrame访问数据========
+======通过索引来访问某行=======
+data.loc["index"]
+======通过所在的位置来访问某行===
+data.iloc[0]
+======通过切片访问数据===========
+data.iloc[1:3]
+
+======访问数据的列=======
+data.age
+data["age"]
+======访问多列数据======
+data[["age","city"]]
+======删除或增加列=====
+在生成了 DataFrame 之后，突然你发现好像缺失了用户的性别这个信息，那么如何添加呢？
+如果所有的性别都一样，我们可以通过传入一个标量，Pandas 会自动帮我们广播来填充所有的位置。
+data["sex"] = male
+user_info["sex"] = ["male", "male", "female", "male"]
+=====删除某列==========
+data.pop("sex")
+如果想要保证原有的 DataFrame 不改变的话，我们可以通过 assign 方法来创建新的一列。
+user_info.assign(age_add_one = user_info["age"] + 1)
