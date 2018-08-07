@@ -8,6 +8,7 @@ https://www.cnblogs.com/dxxblog/p/8193967.html
 /home/xqiang/hive/logs
 /home/xqiang/hive/tmp
 ===========hadoop+hive´î½¨======
+https://blog.csdn.net/yuan_xw/article/details/78197917
 https://blog.csdn.net/u013412497/article/details/54914823
 ======hive¼¯³Éhadoop===========
 https://blog.csdn.net/wangyiyungw/article/details/80266725
