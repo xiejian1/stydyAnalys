@@ -1,5 +1,8 @@
 ==========带登录验证的scrapy爬虫=========
+==========机器识别中的文字识别==========
+pip install pytesseract
 https://www.cnblogs.com/GarfieldEr007/p/5746296.html
+https://www.cnblogs.com/zhongtang/p/5560361.html
 https://www.jb51.net/article/77100.htm
 https://www.jb51.net/article/86006.htm
 =========python opencv图像处理===========

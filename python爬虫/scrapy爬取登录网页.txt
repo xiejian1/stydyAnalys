@@ -1,0 +1,46 @@
+=========================scrapy爬取登录页面========
+1、拿到登录页的源代码，生成form表单 key值对应 网页的'name'
+2、包含隐藏的字段，发送2次请求
+3、代码
+name = "form"
+download_delay = 0.18
+allowed_domains = ["http://www.xxxxxx.com"]
+headers = {
+        "Accept":"*/*",
+        "Accept-Encoding":"gzip, deflate, sdch",
+        "Accept-Language":"zh-CN,zh;q=0.8",
+        "Cache-Control":"max-age=0",
+        "Connection":"keep-alive",
+        "Host": "www.xxxxxx.com",
+        "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"
+    }
+def start_requests(self):
+
+        return [scrapy.Request("http://www.xxxxxxx.com/user/login",meta={'cookiejar':1},headers=self.headers, callback=self.post_login)]
+
+    def post_login(self, response):
+        # 下面这句话用于抓取请求网页后返回网页中的_xsrf字段的文字, 用于成功提交表单
+        protected_code = Selector(response).xpath('//label[@class="rem"]/input[@name="protected_code"]/@value').extract()[0]
+        matchObj=re.search(r'\"csrftk\":\"(.*)\",\"img_path\"',response.text)
+        csrf_tk=matchObj.group(1)
+        logging.log(logging.WARNING, u"正则获取的值----"+csrf_tk)
+        # FormRequeset.from_response是Scrapy提供的一个函数, 用于post表单
+        # 登陆成功后, 会调用after_login回调函数
+        return [scrapy.FormRequest.from_response(response,method="POST",
+                                          headers=self.headers,  # 注意此处的headers
+                                          formdata={
+                                              'protected_code': protected_code,
+                                              'email': 'xxxxxx@qq.com',
+                                              'csrf_tk': csrf_tk,
+                                              'password': 'xxxxxxxxxx',
+
+                                              'remember': 'true',
+                                          },
+                                          meta={'cookiejar': response.meta['cookiejar']},
+                                          callback=self.after_login,
+                                          dont_filter=True
+                                          )]
+=然后设置COOKIES_ENABLED = True和COOKIES_DEBUG=True进行测试.结果发现不成功.查看日志,发现cookie还是登陆之前的状态,登陆的那边被302定向了.
+(现在想来,应该是scrapy重定向的时候,带的还是登陆前的cookie,所以以后的状态还是登录前的).
+既然如此,那就试试关闭重定向,REDIRECT_ENABLED = False,然测试一下,发现爬虫直接退出了.
+根据报错信息上网找答案,HTTPERROR_ALLOWED_CODES = 302, 然后在跑一遍,完美解决.拿到了想要的数据.到这个时候已经花了好几个小时了.中间走了好多弯路.

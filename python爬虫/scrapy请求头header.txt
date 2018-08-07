@@ -1,0 +1,39 @@
+===========header===========
+1、host(主机和端口号)
+2、Connection(连接类型)
+Connection:keep-alive
+3、Upgrade-Insecure-Requests (升级为HTTPS请求)
+4、User-Agent (浏览器名称): 是客户浏览器的名称
+5、Accept (传输文件类型): 指浏览器或其他客户端可以接受的MIME（Multipurpose Internet Mail Extensions（多用途互联网邮件扩展））文件类型，
+服务器可以根据它判断并返回适当的文件格式。
+Accept: */*：表示什么都可以接收。
+Accept：image/gif：表明客户端希望接受GIF图像格式的资源；
+Accept：text/html：表明客户端希望接受html文本。
+Accept: text/html, application/xhtml+xml;q=0.9, image/*;q=0.8：表示浏览器支持的 MIME 类型分别是 html文本、xhtml和xml文档、所有的图像格式资源。html中文件类型的accept属性有哪些
+6、Referer (页面跳转处): 表明产生请求的网页来自于哪个URL，用户是从该 Referer页面访问到当前请求的页面。
+7、Accept-Encoding（文件编解码格式）: 指出浏览器可以接受的编码方式。
+Accept-Encoding:gzip;q=1.0, identity; q=0.5, *;q=0
+8、Accept-Language（语言种类）: 指出浏览器可以接受的语言种类，如en或en-us指英语，zh或者zh-cn指中文，当服务器能够提供一种以上的语言版本时要用到。
+9、Accept-Charset（字符编码）： 指出浏览器可以接受的字符编码。例如：Accept-Charset:iso-8859-1,gb2312,utf-8
+10、Cookie （Cookie）： 浏览器用这个属性向服务器发送Cookie。Cookie是在浏览器中寄存的小型数据体，它可以记载和服务器相关的用户信息，也可以用来实现会话功能
+11、Content-Type (POST数据类型)： POST请求里用来表示的内容类型。例如：Content-Type = Text/XML; charset=gb2312：
+
+==========response==========
+1、Cache-Control：must-revalidate, no-cache, private： 告诉客户端，服务端不希望客户端缓存资源，在下次请求资源时，必须要从新请求服务器，不能从缓存副本中获取资源。
+2、Connection：keep-alive: 客户端服务器的tcp连接也是一个长连接，客户端可以继续使用这个tcp连接发送http请求
+3、Content-Encoding:gzip： 告诉客户端，服务端发送的资源是采用gzip编码的，客户端看到这个信息后，应该采用gzip对资源进行解码。
+4、Content-Type：text/html;charset=UTF-8： 告诉客户端，资源文件的类型，还有字符编码，客户端通过utf-8对资源进行解码，然后对资源进行html解析。
+5、Date：Sun, 21 Sep 2016 06:18:21 GMT： 服务端发送资源时的服务器时间，GMT是格林尼治所在地的标准时间。http协议中发送的时间都是GMT的，这主要是解决在互联网上，不同时区在相互请求资源的时候，时间混乱问题。
+6、Transfer-Encoding：chunked： 这个响应头告诉客户端，服务器发送的资源的方式是分块发送的。
+
+=========响应状态码=========
+100~199：表示服务器成功接收部分请求，要求客户端继续提交其余请求才能完成整个处理过程。
+200~299：表示服务器成功接收请求并已完成整个处理过程。常用200（OK 请求成功）。
+300~399：为完成请求，客户需进一步细化请求。例如：请求的资源已经移动一个新地址、常用302（所请求的页面已经临时转移至新的url）、307和304（使用缓存资源）。
+400~499：客户端的请求有错误，常用404（服务器无法找到被请求的页面）、403（服务器拒绝访问，权限不够）。
+500~599：服务器端出现错误，常用500（请求未完成。服务器遇到不可预知的情况）。
+
+============cookie和session=========
+因为服务器和客户端的交互仅限于请求/响应过程，结束之后便断开，在下一次请求时，服务器会认为新的客户端。为了维护他们之间的链接，让服务器知道这是前一个用户发送的请求，必须在一个地方保存客户端的信息
+Cookie：通过在客户端 记录的信息确定用户的身份。
+Session：通过在服务器端 记录的信息确定用户的身份。

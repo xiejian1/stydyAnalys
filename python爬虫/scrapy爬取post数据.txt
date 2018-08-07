@@ -1,0 +1,117 @@
+=============发送Post请求方式的爬虫========
+Get和Post请求的区别：
+   Get请求：查询参数在QueryString里保存 
+   Post请求：查询参数在FormData中保存
+url = 'http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
+key = input('请输入查询翻译的文字：')
+# 发送到服务器的表单数据，如果是中文需要转码
+fromdata = {
+    'i': key,
+    'from': 'AUTO',
+    'to': 'AUTO',
+    'smartresult': 'dict',
+    'client': 'fanyideskweb',
+    'salt': '1528127663128',
+    'sign': 'c060b56b628f82259225f751c12da59a',
+    'doctype': 'json',
+    'version': '2.1',
+    'keyfrom': 'fanyi.web',
+    'action': 'FY_BY_REALTIME',
+    'typoResult': 'false'
+}
+data = urllib.parse.urlencode(fromdata).encode('utf-8')
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
+}
+request = urllib.request.Request(url, data=data, headers=headers)
+html = urllib.request.urlopen(request).read().decode()
+print(html)
+
+===========get请求========
+==========Ajax加载的内容====
+AJAX一般返回的是JSON,直接对AJAX地址进行post或get,就返回JSON数据了。
+“作为一名爬虫工程师，最需要关注的是数据的来源”
+import urllib.request
+import urllib.parse
+url = 'https://movie.douban.com/j/search_subjects?'
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
+}
+formdata = {
+    'type': 'movie',
+    'tag': '热门',
+    'sort': 'recommend',
+    'page_limit': 20,
+    'page_start': 40
+}
+data = urllib.parse.urlencode(formdata).encode('utf-8')
+request = urllib.request.Request(url, data=data, headers=headers)
+html = urllib.request.urlopen(request).read().decode()
+=======处理HTTPS请求 SSL证书验证=====
+网站的SSL证书是经过CA认证的，则能够正常访问
+单独处理SSL证书，让程序忽略SSL证书验证错误
+import urllib.request
+import ssl
+# 表示忽略未经核实的SSL证书认证
+context = ssl._create_unverified_context()
+url = "https://www.12306.cn/mormhweb/"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"
+}
+request = urllib.request.Request(url, headers = headers)
+# 在urlopen()方法里 指明添加 context 参数
+response = urllib.request.urlopen(request, context = context)
+print(response.read())
+print(html)
+CA: 数字证书认证中心的简称，是指发放、管理、废除数字证书的受信任的第三方机构(类似与身份证)
+CA的作用: 检查证书持有者身份的合法性，并签发证书，以防证书被伪造或篡改，以及对证书和密钥进行管理
+=======Handler和Opener的使用=====
+# -*- coding:utf-8 -*-
+import urllib.request
+# 构建一个HTTPHandler处理器对象，支持处理HTTP的请求
+# http_hander = urllib.request.HTTPHandler()
+http_hander = urllib.request.HTTPHandler(debuglevel=1)
+# 调用build_opener()方法构建一个自定义的opener对象，参数是构建的处理器对象
+opener = urllib.request.build_opener(http_hander)
+res = urllib.request.Request('http://www.baidu.com')
+res = opener.open(req)
+print(res.read().decode())
+========代理ip======
+# -*- coding:utf-8 -*-
+import urllib.request
+# 代理开关，是否启用代理
+proxyswitch = True
+# 公开代理
+proxy_ip = {
+  'http': '123.57.217.208:3128'
+}
+# 私密代理 授权的账号密码
+# proxy_ip_auth = {
+#   'http': 'user:passwd@ip:prot'
+# }
+# 构建一个handler对象，参数是一个字典类型，包括代理类型和代理服务器ip+prot
+http_proxy_handler = urllib.request.ProxyHandler(proxy_ip)
+# 构建一个没有代理对象的处理器对象
+null_proxy_headler = urllib.request.ProxyHandler({})
+if proxyswitch:
+  opener = urllib.request.build_opener(http_proxy_handler)
+else:
+  opener = urllib.request.build_opener(null_proxy_headler)
+# 构建一个全局的opener,之后的所有请求都可以用urlopen()方式发送，也附带Handler功能
+urllib.request.install_opener(opener)
+request = urllib.request.Request('http://www.baidu.com/')
+response = urllib.request.urlopen(request)
+# response = opener.open(request)
+print(response.read().decode())
+
+=======cookie=======
+Cookie 是指某些网站服务器为了辨别用户身份和进行Session跟踪，而储存在用户浏览器上的文本文件，Cookie可以保持登录信息到用户下次与服务器的会话。
+HTTP是无状态的面向连接的协议, 为了保持连接状态, 引入了Cookie机制 Cookie是http消息头中的一种属性
+
+Cookie名字（Name）
+Cookie的值（Value）
+Cookie的过期时间（Expires/Max-Age）
+Cookie作用路径（Path）
+Cookie所在域名（Domain），
+使用Cookie进行安全连接（Secure）。
+该模块主要的对象有CookieJar、FileCookieJar、MozillaCookieJar、LWPCookieJar

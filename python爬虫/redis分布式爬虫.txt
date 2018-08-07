@@ -25,5 +25,8 @@ def parse(self, response):
             yield scrapy.Request( url = item['subUrls'], meta={'meta_1': item}, callback=self.second_parse)
 表示程序处于等待状态，此时在redis数据库端执行如下命令
 5、redis-cli> lpush sinaspider:start_urls http://news.sina.com.cn/guide/、
+==========redis分类====
+根据response返回的ip地址进行判断，是否是符合本次解析的ip地址,如果不是，则不进行本次的解析
+
 
 
