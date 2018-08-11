@@ -1,2 +1,14 @@
 ========springcloud全解==========
 http://www.ityouknow.com/springboot/2016/01/06/springboot(%E4%B8%80)-%E5%85%A5%E9%97%A8%E7%AF%87.html
+========springcloud搭建微服务架构===
+http://blog.didispace.com/springcloud5/ 
+========springcloud微服务-彩虹的微笑====
+http://www.ityouknow.com/springboot/2016/01/06/springboot(%E4%B8%80)-%E5%85%A5%E9%97%A8%E7%AF%87.html 
+========ssm框架=====================
+https://blog.csdn.net/cj4480269876/article/details/49911493 
+========springboot整合activity======
+https://blog.csdn.net/fanxiangru999/article/details/79381966
+========最简单的springcloud=========
+https://blog.csdn.net/forezp/article/details/70148833/
+========springcoud采坑是实战========
+https://blog.csdn.net/zhaoenweiex/article/details/74122293
