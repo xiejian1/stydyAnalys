@@ -1,0 +1,5 @@
+======mysql分区分表=====
+https://www.cnblogs.com/phpshen/p/6198375.html
+https://blog.csdn.net/zzy7075/article/details/70054818
+======数据库性能优化====
+https://www.cnblogs.com/zhouyusheng/p/8038224.html

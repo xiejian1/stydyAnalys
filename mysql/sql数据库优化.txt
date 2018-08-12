@@ -1,0 +1,102 @@
+1、========数据库中导入cvs文件
+LOAD DATA LOCAL INFILE 'C:\\Users\\xieqiang-daye\\Desktop\\毕业设计\\info\\position-information.csv' 
+INTO TABLE `employ`.`position_info` 
+CHARACTER SET GBK FIELDS ESCAPED BY '\\' TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\r\n' (`id`,`job_description`,`positionId`)
+
+LOAD DATA LOCAL INFILE 'C:\\Users\\xieqiang-daye\\Desktop\\毕业设计\\info\\recruit-information.csv' INTO TABLE `employ`.`recruit_info` CHARACTER SET GBK FIELDS ESCAPED BY '\\' TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' (`id`,`city`,`company_name`
+,`company_short_name`,`company_size`,`create_time`,`education`,`finance_stage`,`industry_field`,`job_nature`,`position_first_type`,`position_name`,`position_type`,`salary`,`worker_year`,`companyId`,`positionId`)
+
+LOAD DATA LOCAL INFILE 'C:\\Users\\xieqiang-daye\\Desktop\\毕业设计\\info\\company-information.csv' INTO TABLE `employ`.`company_info` CHARACTER SET GBK FIELDS ESCAPED BY '\\' TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' (`id`,`slogan`,`company_introduction`,`companyId`)
+2、=======数据库修改表
+ 1) alert table tableName add fieldName type -----添加字段
+ 2) alert table tableName drop column fidleName ---删除字段
+ 3) rename table oldtableName to newTable
+3、数据库初始登录密码
+1) linux中修改/etc/my.cnf文件 ---> 添加skip-grant-tables 
+2）重启mysql service mysqld restart 
+3）mysql>use mysql;
+mysql>update mysql.user set authentication_string=password('密码') where user='root';
+mysql>flush privileges;
+mysql>exit;
+4) 注释掉 /etc/my.cnf 下面的skip-grant-tables;
+4、linux开放端口
+iptables -A  INPUT -p tcp --dport 8080 -j ACCEPT
+iptables -A  OUTPUT -p tcp --dport 80 -j DROP  --关闭端口
+
+======sql数据库优化=====
+1、存储过程
+2、影响数据库性能的关键因素
+3、进行分页查询(减少i/o的查询)
+1) 数据库设计
+2) SQL语句优化
+3）架构优化
+导致数据库性能差的原因
+1）数据性能差，响应慢的原因
+响应时间，扫描的行数，返回的数据行数
+2) 具体原因
+数据库设计不合理(DBA),SQL慢查询
+4、数据库的设计
+1）适度违反三大范式
+一范式，表的列不可在分割，列的信息不能再分解
+二范式，表中的记录是唯一的，通常的主键
+三范式，表中有冗余数据，表中的数据可以通过其他途径被推导出来，就不能够单独设立一个字段 
+在表的1对N的情况下，可以增加适当的冗余数据，提高效率。
+循三大范式后续查询时需要经常使用join,导致查询效率低，结合业务需求适当做数据冗余
+2）适度建立索引
+IO(更新惭怍速度降低，索引的操作)、存储空间
+建立索引的的规则
+a.索引的字段必须是经常用来作为查询条件的字段，where
+b.如果是多个字段的情况，第一个字段是经常作为查询条件的
+c.索引的字段必须有足够的区分度
+3) 对表进行水平划分
+每年产生100万条数据，按年或月对数据进行区分键表，
+4）对表进行垂直划分
+某张表中有很多字段，或某个字段很长io消耗大，根据业务需求适当划分为多个表
+5）选择适当的字段类型
+6) 文件图片等大文件使用文件存储系统，数据库中只存放路径
+7) 外键要表示清除
+8）集中批量操作，不频繁读写
+9）选择合适的引擎
+10）字段数据类型的选择，尽量选择数字(bigint)
+=========SQL优化===========
+1) 慢查询 explain  --
+-ALL 全表扫面 --index 遍历索引数  --range 索引扫描范围
+-ref 使用非唯一索引扫描或者唯一扫描的前缀扫描
+--const、system单SQL对某部分进行扫描 
+2) [避免全表扫描] 考虑在where 和order by 中建立索引
+3）尽量避免在where子句中使用null，会放弃索引，进行全表扫描
+4）尽量避免在where子句中使用运算符(!=,<>)或函数(year())
+5）避免使用or，会走全表扫描，union all
+6）能使用between就不能使用in
+7）like尽量避免使用%%，不会走索引，D%会走索引
+8) 查询时尽量避免使用select *,仅列出需要查询的字段
+9) join的操作，小结果驱动大结果
+10）分页查询时，数据比较大时，不要使用limit，尽量换成between
+===========定位慢查询=========
+迅速定位执行速度比较慢的SQL语句====定位慢查询
+1）查询数据库操作的状态
+show status;
+show status like 'insert';
+2)慢查询的次数
+show status like 'slow_queries';
+show variables like 'long_query_time';
+3)把慢查询的记录保存到日志中
+
+show create table table_name  --显示创建表
+unique --唯一索引    主键列会唯一约束的列，会默认加索引
+表结构添加索引
+aletr table table_name add index index_name(column)
+alert table table_name drop index_name
+select * from table_name where name like '%'
+show index from table_name --显示表的索引
+
+===调整mysql.ini=====
+1) 最大连接 max_connector
+2）调整缓存大小
+3）存储过程
+4)读写分离
+5)分表设计
+6)定时去清除不需要的数据
+2、一范式，表的列具有原子性，不能在分割,关心型数据库自动满足一范式
+   二范式，记录是唯一的就满足二范式

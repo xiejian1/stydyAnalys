@@ -1,0 +1,19 @@
+=========ubuntu下安装mysql=======
+apt-get install mysql-server mysql-client
+=========查看软件是否安装========
+netstat -tap|grep mysql
+=========启动mysql服务===========
+start mysql 
+=========停止mysql===============
+stop mysql 
+=========修改mysql管理员密码=====
+mysqladmin -u root password new
+=========数据库创建用户==========
+create user 'name'@'%' identified by 'passwd';
+=========授权====================
+grant all privileges on *.* to 'name'@'%';
+=========刷新权限================
+flush privileges;
+
+/home/xqiang/jdk/jdk1.8
+ 
