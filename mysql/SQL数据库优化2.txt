@@ -1,0 +1,51 @@
+=================选择mysql的存储引擎=====
+1、如果对表的事务要求不高的，主要以查询和添加为主的，考虑用myisam引擎
+2、innodb存储，对事务的要求非常高，保存的数据都是非常重要的，订单表，账号表
+3、memory存储，数据变化的比较频繁，并且不需要入库的，同时有频繁的查询和修改
+=================之间的区别==========
+1、事务安全方面
+2、查询和添加的速度
+3、全文索引
+4、锁机制
+5、外键，myisam不支持，innodb支持
+===========数据库定时备份=======
+mysqldump -u -p 数据库>文件路径
+1、备份数据库的某张表
+mysqldump -u -p 数据库[表名] > 文件路径
+2、数据库的恢复
+source 文件路径
+===========使用定时器自动完成数据库备份=======
+1、把备份数据库的指令写入到bat文件中，然后通过任务管理器定时去执行
+===========表的水平分割技术==================
+根据不同的分类进行相应的分割
+可以根年月日分割表
+1、建立一张总表
+2、然后根据规则对总表进行相应的分割
+==========表的垂直分割==================
+==========优化mysql的配置===============
+max_connection = 1000 最大连接数
+default_storage_engine = innodb  存储引擎
+query_cache_size = 15M  
+innodb_additional_mem_poo_size =64M
+innodb_buffer_pool_size = 1G
+===========数据库的增量备份=============
+启动增量备份
+1、增量备份会记录(dml语句，创建表语句，不会记录select语句)
+2、记录的(操作语句本身，操作的时间 position)
+3、配置mysql.ini文件，启用二进制备份文件
+mysqlbinlog  filepath =""
+log-bin = d:/back
+4、时间点
+mysqlbinlog --stop-datetime=""  filepath  ==备份到stop时间点结束
+mysqlbinlog --stop-position="" filepath ==备份到stop位置结束
+mysqlbinlog --start-datetime=""  filepath  ==备份到stop时间点结束
+mysqlbinlog --start-datetime="" --stop-datetime="" filepath  ==备份到stop时间点结束
+-expire_logs_days   ==设置日志的过期天数
+===========数据库备份的方案=============
+1、每周做一个全备份 mysqldump,启用增量备份，把过期时间设置为大于等于7天
+2、数据库崩了，通过时间或者位置恢复
+===========定时发送邮件功能=============
+unix_timestamp()获取时间
+===========搭建邮件服务器===============
+1、安装dbmailserver
+2、
