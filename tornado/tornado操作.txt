@@ -1,0 +1,14 @@
+======================tornado操作手册====================
+1、定义一个类集成Tornado的RequestHandler类
+1) 编写get方法
+2) 编写post方法
+2、启动tornabo应用程序
+tornado.options.parse_command_line()  --解析命令行
+http_server = tornado.httpserver.HTTPServer(Application())   --通过HTTPServer类获取到server对象，传入server配置的参数
+http_server.listen(options.port)   --sever监听指定的端口
+tornado.ioloop.IOLoop.instance().start()  --接收数据
+
+3、内建的各种方法
+1）get_argument()  --获取参数
+2) write() --以字符串作为参数，返回给HYYP请求
+3）
