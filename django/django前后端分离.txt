@@ -1,0 +1,42 @@
+=================django前后端分离================
+https://blog.csdn.net/qq_30889373/article/details/79022786
+1、设置settings.py文件
+INSTALLED_APPS = [
+    # 加入这句话
+    'apps.ulb_manager',
+]
+2、关闭一些跨域的验证
+MIDDLEWARE_CLASSES = [
+    # 关闭掉跨域的一些验证，注释掉下面这句话
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+
+]
+3、urls.py文件中注册接口
+from django.conf.urls import url
+from django.contrib import admin
+from apps.ulb_manager.views import apis
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^api', apis),
+]
+4、编写一些view视图
+# 返回值
+    response = JsonResponse(resultList, safe=False)
+    # response.status_code = 500  自定义响应码
+    return response
+
+5、解决跨域请求的问题
+这时候我们须要在Django层注入header，用Django的第三方包django-cors-headers来解决跨域问题：
+
+       pip install django-cors-headers
+
+
+import time
+t = "2017-11-24 17:30:00"
+#将其转换为时间数组
+timeStruct = time.strptime(t, "%Y-%m-%d %H:%M:%S")
+strTime = time.strftime("%Y-%m-%d", timeStruct)
+print(strTime)
+
+

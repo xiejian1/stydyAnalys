@@ -1,0 +1,37 @@
+=============nginx缓存配置===========
+1、缓存配置proxy_cache.conf
+#设置Web缓存区名称为cache，内存缓存空间大小为200MB
+#1天没有被访问的内容自动清除，硬盘缓存空间大小为10GB
+#levels=1:2 表示缓存目录的第一级目录是1个字符，第二级目录是2个字符
+#proxy_cache_key 设置缓存的key，以域名、URI、参数组合成Web缓存的Key值，Nginx根据Key值哈希，存储缓存内容到二级缓存目录内
+proxy_cache_path /home/cache levels=1:2 keys_zone=cache:200m inactive=1d  max_size=10g;
+proxy_cache_valid  200 304 301 302 8h;
+proxy_cache_valid  404 1m;
+proxy_cache_key    $host$uri$is_args$args;
+2、report.conf
+#报告
+server {
+        listen       80;
+        server_name  report.52itstyle.com;
+        access_log     /usr/local/nginx/logs/report.52itstyle.com.access.log access;
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|css|js|ico)?$ {
+            expires      1d;#缓存时间
+            proxy_cache cache;#设置资源缓存的zon
+            add_header  Nginx-Cache "$upstream_cache_status";#显示缓存的状态
+            proxy_pass      http://report;
+        }
+        location / {
+              proxy_pass      http://report;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+}
+upstream report {
+         fair;
+         server  172.16.1.120:8882 weight=1  max_fails=2 fail_timeout=30s;
+         server  172.16.1.120:8881 weight=1  max_fails=2 fail_timeout=30s;
+}
+3、

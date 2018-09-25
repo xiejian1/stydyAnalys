@@ -1,0 +1,4 @@
+=======java操作hadoop========
+https://www.cnblogs.com/Eddyer/p/6641778.html
+=======java读取hdfs文件系统=====
+https://www.cnblogs.com/zhangyinhua/p/7678704.html

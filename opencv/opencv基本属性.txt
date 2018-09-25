@@ -1,0 +1,117 @@
+https://www.cnblogs.com/Undo-self-blog/p/8423851.html
+============opencv动态物体追踪===========
+https://blog.csdn.net/cike14/article/details/50649811
+https://blog.csdn.net/qq_35488769/article/details/79103264
+===========opencv多目标追踪=======
+https://blog.csdn.net/xiao__run/article/details/81084209
+============基本属性=========
+1.cv2.imread(filename,property)   ===属性：指定图像用哪种方式读取文件
+    				cv2.IMREAD_COLOR：读入彩色图像，默认参数，Opencv 读取彩色图像为BGR模式 ！！！注意
+    				cv2.IMREAD_GRAYSCALE：读入灰度图像。
+2.cv2.imshow(窗口名，图像文件)
+3.cv2.waitKey() ==键盘绑定函数
+4.cv2.namedWindow(窗口名，属性)    ==属性:指定窗口大小模式
+    				cv2.WINDOW_AUTOSIZE：根据图像大小自动创建大小
+    				cv2.WINDOW_NORMAL：窗口大小可调整
+5.cv2.destoryAllWindows(窗口名)  ==== 删除任何建立的窗口
+
+==========获取图像的属性======
+img.shape  ==形状
+img.size ===大小
+img.dtype  ==数据类型 
+=========输出文本======
+cv2.putText(图片名字，文字，坐标，文字颜色)
+=========缩放图=====
+实现缩放图片并保存，在使用OpenCV时常用的操作。cv2.resize()支持多种插值算法，
+默认使用cv2.INTER_LINEAR，
+缩小最适合使用：cv2.INTER_AREA，
+放大最适合使用：cv2.INTER_CUBIC或cv2.INTER_LINEAR。
+res=cv2.resize(image,(2*width,2*height),interpolation=cv2.INTER_CUBIC)
+或者：
+res=cv2.resize(image,None,fx=2,fy=2,interpolation=cv2.INTER_CUBIC)
+此处None本应该是输出图像的尺寸，因为后边设置了缩放因子
+=========图像平移========
+cv2.warpAffine(src, M, dsize[, dst[, flags[, borderMode[, borderValue]]]])
+平移就是将图像换个位置，如果要沿(x,y)方向移动，移动距离为(tx,ty),则需要构建偏移矩阵M。 
+import cv2
+    img=cv2.imread('test.png',1)
+    rows,cols,channel=img.shape
+    M=np.float32([[1,0,100],[0,1,50]])
+    dst=cv2.warpAffine(img,M,(cols,rows))
+    cv2.imshow('img',dst)
+    cv2.waitKey(0)
+    cv2.destoryALLWindows()
+
+============图像旋转======
+OpenCV中首先需要构造一个旋转矩阵，通过cv2.getRotationMatrix2D获得。
+import cv2
+img=cv2.imread('test.png',0)
+rows,cols=img.shape
+#第一个参数为旋转中心，第二个为旋转角度，第三个为旋转后的缩放因子
+M=cv2.getRotationMatrix2D((cols/2,rows/2),45,0.6)
+#第三个参数为图像的尺寸中心
+dst=cv2.warpAffine(img,M,(2*cols,2*rows))
+cv2.imshow('img',dst)
+cv2.waitKey(0)
+cv2.destoryALLWindows()
+========反射变换======
+在仿射变换中，原图中所有的平行线在结果图像中同样平行。为了创建偏移矩阵，需要在原图像中找到三个点以及它们在输出图像中的位置。
+然后OpenCV中提供了cv2.getAffineTransform创建2*3的矩阵，最后将矩阵传给函数cv2.warpAffine。
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+img=cv2.imread('test.png')
+rows,cols,ch=img.shape
+pts1=np.float32([[50,50],[200,50],[50,200]])
+pts2=np.float32([[10,100],[200,50],[100,250]])
+M=cv2.getAffineTransform(pts1,pts2)
+dst=cv2.warpAffine(img,M,(cols,rows))
+plt.subplot(121),plt.imshow(img),plt.title('Input')
+plt.subplot(122),plt.imshow(dst),plt.title('Output')
+plt.show()
+=========透视变换=====
+视角变换，需要一个3*3变换矩阵。在变换前后要保证直线还是直线。构建此矩阵需要在输入图像中找寻4个点，以及在输出图像中对应的位置。这四个点中的任意三个点不能共线。
+变换矩阵OpenCV提供cv2.getPerspectiveTransform()构建。然后将矩阵传入函数cv2.warpPerspective。
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+img=cv2.imread('test.png')
+rows,cols,ch=img.shape
+pts1=np.float32([[56,65],[368,52],[28,387],[389,390]])
+pts2=np.float32([[0,0],[300,0],[0,300],[300,300]])
+M=cv2.getPerspectiveTransform(pts1,pts2)
+dst=cv2.warpPerspective(img,M,(300,300))
+plt.subplot(121),plt.imshow(img),plt.title('Input')
+plt.subplot(122),plt.imshow(dst),plt.title('Output')
+plt.show()
+
+
+=======图像 regions of Interest====
+有时需要对一副图像的特定区域进行操作，ROI使用Numpy索引来获得的。
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+image=cv2.imread('test.png')
+rows,cols,ch=image.shape
+tall=image[0:100,300:700]
+image[0:100,600:1000]=tallall
+cv2.imshow("image",image)
+cv2.waitKey(0)
+cv2.destoryALLWindows()
+
+=======通道的拆分/合并处理======
+有时需要对BGR三个通道分别进行操作。这时需要将BGR拆分成单个通道。同时有时需要把独立通道的图片合并成一个BGR图像。
+使用OpenCV库函数版本
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+image=cv2.imread('pitt1.jpg')
+rows,cols,ch=image.shape
+#拆分通道，cv2.split()是一个比较耗时的操作。只有需要时使用，尽量Numpy
+b,g,r=cv2.split(image)
+print b.shape
+#(768,1024)
+#合并通道
+image=cv2.merge(b,g,r)

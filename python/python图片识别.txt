@@ -1,0 +1,6 @@
+=========简单处理======
+from pytesser import *
+image = Image.open('1.jpg') # Open image object using PIL 
+print image_to_string(image)  # Run tesseract.exe on image 
+========复杂去燥======
+彩色转灰度--灰度转二值化--二值化图像识别

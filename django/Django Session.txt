@@ -1,0 +1,140 @@
+===============Django Session会话================
+启用Session
+
+Django项目默认启用Session。
+
+打开test3/settings.py文件，在项MIDDLEWARE_CLASSES中启用Session中间件。
+
+禁用Session：将Session中间件删除。
+存储方式
+
+打开test3/settings.py文件，设置SESSION_ENGINE项指定Session数据存储的方式，可以存储在数据库、缓存、Redis等。
+
+1）存储在数据库中，如下设置可以写，也可以不写，这是默认存储方式。
+
+SESSION_ENGINE='django.contrib.sessions.backends.db'
+
+2）存储在缓存中：存储在本机内存中，如果丢失则不能找回，比数据库的方式读写更快。
+
+SESSION_ENGINE='django.contrib.sessions.backends.cache'
+
+3）混合存储：优先从本机内存中存取，如果没有则从数据库中存取。
+
+SESSION_ENGINE='django.contrib.sessions.backends.cached_db'
+
+4）如果存储在数据库中，需要在项INSTALLED_APPS中安装Session应用。
+
+5）迁移后会在数据库中创建出存储Session的表。
+
+6）表结构如下图。
+
+    由表结构可知，操作Session包括三个数据：键，值，过期时间。
+
+依赖于Cookie
+
+所有请求者的Session都会存储在服务器中，服务器如何区分请求者和Session数据的对应关系呢？
+
+答：在使用Session后，会在Cookie中存储一个sessionid的数据，每次请求时浏览器都会将这个数据发给服务器，服务器在接收到sessionid后，会根据这个值找出这个请求者的Session。
+
+结果：如果想使用Session，浏览器必须支持Cookie，否则就无法使用Session了。
+
+存储Session时，键与Cookie中的sessionid相同，值是开发人员设置的键值对信息，进行了base64编码，过期时间由开发人员设置。
+对象及方法
+
+通过HttpRequest对象的session属性进行会话的读写操作。
+
+1） 以键值对的格式写session。
+
+request.session['键']=值
+
+2）根据键读取值。
+
+request.session.get('键',默认值)
+3) 清除所有session，在存储中删除值部分。
+request.session.clear()
+4) 4）清除session数据，在存储中删除session的整条数据。
+
+request.session.flush()
+
+5）删除session中的指定键及值，在存储中只删除某个键及对应的值。
+
+del request.session['键']
+
+6）设置会话的超时时间，如果没有指定过期时间则两个星期后过期。
+
+request.session.set_expiry(value)
+
+
+
+======================使用redis进行Session存储=================
+会话还支持文件、纯cookie、Memcached、Redis等方式存储，下面演示使用redis存储。
+修改test3/settings文件，增加如下项：
+
+    SESSION_ENGINE = 'redis_sessions.session'
+    SESSION_REDIS_HOST = 'localhost'
+    SESSION_REDIS_PORT = 6379
+    SESSION_REDIS_DB = 2
+    SESSION_REDIS_PASSWORD = ''
+    SESSION_REDIS_PREFIX = 'session'
+
+
+==================Session=====================
+# 获取、设置、删除Session中数据
+        request.session['k1']
+        request.session.get('k1',None) #这样取值的不报错，没有拿None
+        request.session['k1'] = 123
+        request.session.setdefault('k1',123) # 存在则不设置
+        del request.session['k1']
+ 
+        # 所有 键、值、键值对
+        request.session.keys()
+        request.session.values()
+        request.session.items()
+        request.session.iterkeys()
+        request.session.itervalues()
+        request.session.iteritems()
+ 
+ 
+        # 用户session的随机字符串
+        request.session.session_key       
+
+        request.session.clear_expired()
+
+   #sessionID在客户端，过期后自动失效；
+　　但session信息存储在数据库里，sessionID过期后怎么删除呢？
+   无法动态删过期的session，可执行这个方法！（数据库中不仅存储了session 还有该session的过期时间，这个方法就是where数据库里时间过期的session删除掉）
+
+   request.session.exists("session_key")# 检查 用户session的随机字符串 在数据库中是否
+
+# 删除当前用户的所有Session数据 
+request.session.delete("session_key") 
+
+request.session.set_expiry(value) 设置session过期时间
+
+* 如果value是个整数，session会在些秒数后失效。 * 
+如果value是个datatime或timedelta，session就会在这个时间后失效。 *
+
+ 如果value是0,用户关闭浏览器session就会失效。 * 
+如果value是None,session会依赖全局session失效策略。
+
+=======================settings.py=======================
+#session配置文件
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'  # 引擎
+SESSION_FILE_PATH = 文件路径  # 缓存文件路径，如果为None，则使用tempfile模块获取一个临时地址tempfile.gettempdir()                                                            # 如：/var/folders/d3/j9tj0gz93dg06bmwxmhh6_xm0000gn/T
+session不仅可以保存在数据库里，
+    数据库（默认）
+    缓存（memchache、redis）
+    文件
+    缓存+数据库
+    加密cookie
+SESSION_COOKIE_NAME="zhanggen"  # Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串
+SESSION_COOKIE_PATH="/"  # Session的cookie保存的路径
+SESSION_COOKIE_DOMAIN = None  # Session的cookie保存的域名
+SESSION_COOKIE_SECURE = False  # 是否Https传输cookie
+SESSION_COOKIE_HTTPONLY = True  # 是否Session的cookie只支持http传输
+SESSION_COOKIE_AGE = 600000  # Session的cookie失效日期（2周） 默认1209600秒
+SESSION_EXPIRE_AT_BROWSER_CLOSE =True  # 是否关闭浏览器使得Session过期
+
+SESSION_SAVE_EVERY_REQUEST = True  
+#如果你设置了session的过期时间 30分钟后，这个参数是False30分钟过后，session准时失效
+#如果设置 True，在30分钟期间有请求服务端，就不会过期！（为什么逛一晚上淘宝，也不会登出，但是不浏览器不刷新了就会自动登出）

@@ -1,0 +1,37 @@
+参数介绍
+
+1、max_age=1 ：cookie生效的时间，单位是秒
+
+2、expires:具体过期日期  
+
+3、path='/'：指定那个url可以访问到cookie；‘/’是所有； path='/'
+
+4、 domain=None（None代表当前域名）：指定那个域名以及它下面的二级域名（子域名）可以访问这个cookie
+
+5、secure=False：https安全相关
+
+ 
+
+6、httponly=False：限制只能通过http传输，JS无法在传输中获取和修改
+
+ 
+设置cookie
+
+1.普通
+
+obj.set_cookie("tile","zhanggen",expires=value,path='/' )
+
+2.加盐
+
+普通cookie是明文传输的，可以直接在客户端直接打开，所以需要加盐，解盐之后才能查看
+obj.set_signed_cookie('k','v',salt="zhangge")
+ 
+获取cookie
+
+1、普通
+
+request.COOKIES.get(‘k’）
+
+2、加盐
+
+cookies=request.get_signed_cookie('k',salt='zhanggen')

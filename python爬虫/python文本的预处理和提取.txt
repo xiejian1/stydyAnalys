@@ -1,0 +1,210 @@
+==========python文本处理=====
+https://blog.csdn.net/wumian0123/article/details/81435588
+=========python文本提取步骤=====
+https://blog.csdn.net/birdcome/article/details/77971921
+=========文本过滤=====
+1、result = re.sub(r'[^\u4e00-\u9fa5,。？！，、；：“ ”‘ ’（ ）《 》〈 〉]', "", content)#只保留中文和标点
+2、result = re.sub(r'[^\u4e00-\u9fa5]', "",content)#只保留中文
+3、result = re.sub(r'[^\0-9\.\u4e00-\u9fa5,。？！，、；：“ ”‘ ’（ ）《 》〈 〉]', "", content)#只保留中文和标点和数字
+4、result = re.sub(r'[^\u4e00-\u9fa5,A-Za-z0-9]', "",content)#只保留中文、英文和数字
+5、文本去除两个以上空格
+content=re.sub(r'\s{2,}', '', content)
+6、base64编码变成中文
+def bas4_decode(bas4_content):
+    decodestr= base64.b64decode(bas4_content)
+    result = re.sub(r'[^\0-9\.\u4e00-\u9fa5,。？！，、；：“ ”‘ ’（ ）《 》〈 〉]', "", decodestr.decode())#只保留中文和标点和数字
+    return result
+7、文本去停用词
+def text_to_wordlist(text):
+    result = re.sub(r'[^\u4e00-\u9fa5]', "",text)
+    f1_seg_list = jieba.cut(result)#需要添加一个词典，来弥补结巴分词中没有的词语，从而保证更高的正确率
+    f_stop = codecs.open(".\stopword.txt","r","utf-8")
+    try:
+        f_stop_text = f_stop.read()
+    finally:
+        f_stop.close()
+    f_stop_seg_list = f_stop_text.split()
+ 
+    test_words = []
+ 
+    for myword in f1_seg_list:
+        if myword not in f_stop_seg_list:
+            test_words.append(myword)
+            
+    return test_words
+8、文本特征提取
+import jieba  
+import jieba.analyse  
+import numpy as np  
+#import json  
+import re
+def Textrank(content):
+    result = re.sub(r'[^\u4e00-\u9fa5]', "",content)
+    seg = jieba.cut(result)  
+    jieba.analyse.set_stop_words('stopword.txt')
+    keyList=jieba.analyse.textrank('|'.join(seg), topK=10, withWeight=False)  
+    return keyList
+def TF_IDF(content):
+    result = re.sub(r'[^\u4e00-\u9fa5]', "",content)
+    seg = jieba.cut(result)  
+    jieba.analyse.set_stop_words('stopword.txt')
+    keyWord = jieba.analyse.extract_tags(  
+        '|'.join(seg), topK=10, withWeight=False, allowPOS=())#关键词提取，在这里对jieba的tfidf.py进行了修改   
+    return keyWord
+==========python jieba分词库=======
+seg_list = jieba.cut("我来到北京清华大学", cut_all=True, HMM=False)
+print("Full Mode: " + "/ ".join(seg_list))  # 全模式
+
+# jieba.cut的默认参数只有三个,jieba源码如下
+# cut(self, sentence, cut_all=False, HMM=True)
+# 分别为:输入文本 是否为全模式分词 与是否开启HMM进行中文分词
+2、关键词提取
+from os import path
+import jieba.analyse as analyse
+
+d = path.dirname(__file__)
+
+text_path = 'txt/lz.txt' #设置要分析的文本路径
+text = open(path.join(d, text_path)).read()
+
+for key in analyse.extract_tags(text,50, withWeight=False):
+# 使用jieba.analyse.extract_tags()参数提取关键字,默认参数为50
+    print key.encode('utf-8')
+    # 设置输出编码为utf-8不然在因为win下控制台默认中文字符集为gbk,所以会出现乱码
+    # 当withWeight=True时,将会返回number类型的一个权重值(TF-IDF)
+注意：
+运行结果如图所示,但是同样的我们也发现了一些问题,比如:
+问题一:
+分词错误,在运行结果中中”路明非”(龙族男主)被分成了”路明”和”明非”啷个中文词语,这是因为jieba的词库中并不含有该词的原因,同样的原因以及jieba词库比较老,因而在许多文本分词时都会产生这种情况,而这个问题我们将在第五个模块”三种可以让分词更准确的方法”解决
+问题二:
+出现非实意词语,无论在哪种语言中,都会存在大量的非实意单词,这一类词云我们需要在进行中文分词时进行去除停用词,这个问题将在下一个模块中解决
+
+
+3、中文歧义测试与去除停用词
+import sys
+import jieba
+from os import path
+
+d = path.dirname(__file__)
+stopwords_path = 'stopwords\stopwords1893.txt' # 停用词词表
+
+text_path = 'txt/lz.txt' #设置要分析的文本路径
+text = open(path.join(d, text_path)).read()
+
+def jiebaclearText(text):
+    mywordlist = []
+    seg_list = jieba.cut(text, cut_all=False)
+    liststr="/ ".join(seg_list)
+    f_stop = open(stopwords_path)
+    try:
+        f_stop_text = f_stop.read( )
+        f_stop_text=unicode(f_stop_text,'utf-8')
+    finally:
+        f_stop.close( )
+    f_stop_seg_list=f_stop_text.split('\n')
+    for myword in liststr.split('/'):
+        if not(myword.strip() in f_stop_seg_list) and len(myword.strip())>1:
+            mywordlist.append(myword)
+    return ''.join(mywordlist)
+
+text1 = jiebaclearText(text)
+print text1
+
+==========3种让分词更准确的方法=======
+1、在jieba中添加中文分词
+#这个只需要在源代码中加入一个语句即可
+import sys
+import jieba
+from os import path
+
+d = path.dirname(__file__)
+stopwords_path = 'stopwords\stopwords1893.txt' # 停用词词表
+
+jieba.add_word('路明非')
+# 添加的自定义中文语句的代码在这里
+# 添加的自定义中文语句的代码在这里
+# 添加的自定义中文语句的代码在这里
+
+text_path = 'txt/lz.txt' #设置要分析的文本路径
+text = open(path.join(d, text_path)).read()
+
+def jiebaclearText(text):
+    mywordlist = []
+    seg_list = jieba.cut(text, cut_all=False)
+    liststr="/ ".join(seg_list)
+    f_stop = open(stopwords_path)
+    try:
+        f_stop_text = f_stop.read( )
+        f_stop_text=unicode(f_stop_text,'utf-8')
+    finally:
+        f_stop.close( )
+    f_stop_seg_list=f_stop_text.split('\n')
+    for myword in liststr.split('/'):
+        if not(myword.strip() in f_stop_seg_list) and len(myword.strip())>1:
+            mywordlist.append(myword)
+    return ''.join(mywordlist)
+
+text1 = jiebaclearText(text)
+print text1
+2、添加自定义词库
+#encoding=utf-8
+from __future__ import print_function, unicode_literals
+import sys
+sys.path.append("../")
+import jieba
+jieba.load_userdict("userdict.txt")
+# jieba采用延迟加载，"import jieba"不会立即触发词典的加载，一旦有必要才开始加载词典构建trie。如果你想手工初始jieba，也可以手动初始化。示例如下:
+# import jieba
+# jieba.initialize() #手动初始化（可选）
+# 在0.28之前的版本是不能指定主词典的路径的，有了延迟加载机制后，你可以改变主词典的路径:
+# 注意用户词典为主词典即优先考虑的词典,原词典此时变为非主词典
+# jieba.set_dictionary('data/dict.txt.big')
+
+import jieba.posseg as pseg
+
+test_sent = (
+"李小福是创新办主任也是云计算方面的专家; 什么是八一双鹿\n"
+"例如我输入一个带“韩玉赏鉴”的标题，在自定义词库中也增加了此词为N类\n"
+"「台中」正確應該不會被切開。mac上可分出「石墨烯」；此時又可以分出來凱特琳了。"
+)
+words = jieba.cut(test_sent)
+print('/'.join(words))
+
+print("="*40)
+
+result = pseg.cut(test_sent)
+# pseg.cut 切分,并显示词性
+# 下面是userdict.txt的内容,如果不加入这个词库,那么在运行结果中,云计算,创新办等词都将无法识别
+'''
+云计算 5
+李小福 2 nr
+创新办 3 i
+easy_install 3 eng
+好用 300
+韩玉赏鉴 3 nz
+八一双鹿 3 nz
+台中
+凱特琳 nz
+Edu Trust认证 2000
+'''
+
+
+print('='*40)
+print('添加自定义词典/调整词典')
+print('-'*40)
+
+print('/'.join(jieba.cut('如果放到post中将出错。', HMM=False)))
+#如果/放到/post/中将/出错/。
+# 调整词典使 中将 变为中/将
+print(jieba.suggest_freq(('中', '将'), True))
+#494
+print('/'.join(jieba.cut('如果放到post中将出错。', HMM=False)))
+#如果/放到/post/中/将/出错/。
+print('/'.join(jieba.cut('「台中」正确应该不会被切开', HMM=False)))
+#「/台/中/」/正确/应该/不会/被/切开
+print(jieba.suggest_freq('台中', True))
+print(jieba.suggest_freq('台中', True))
+#69
+# 调整词典使 台中 不被分词为台/中
+print('/'.join(jieba.cut('「台中」正确应该不会被切开', HMM=False)))
+#「/台中/」/正确/应该/不会/被/切开

@@ -1,0 +1,41 @@
+===============tomcat线程池===================
+1、<Executor name="tomcatThreadPool"   
+        namePrefix="tomcatThreadPool-"   
+        maxThreads="1000"   
+        maxIdleTime="300000"  
+        minSpareThreads="200"/>  
+说明
+    name：共享线程池的名字。这是Connector为了共享线程池要引用的名字，该名字必须唯一。默认值：None；
+    namePrefix:在JVM上，每个运行线程都可以有一个name 字符串。这一属性为线程池中每个线程的name字符串设置了一个前缀，Tomcat将把线程号追加到这一前缀的后面。默认值：tomcat-exec-；
+    maxThreads：该线程池可以容纳的最大线程数。默认值：200；
+    maxIdleTime：在Tomcat关闭一个空闲线程之前，允许空闲线程持续的时间(以毫秒为单位)。只有当前活跃的线程数大于minSpareThread的值，才会关闭空闲线程。默认值：60000(一分钟)。
+    minSpareThreads：Tomcat应该始终打开的最小不活跃线程数。默认值：25。
+2、<Connector executor="tomcatThreadPool"
+           port="8080" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443"
+           minProcessors="5"
+           maxProcessors="75"
+           acceptCount="1000"/>
+说明
+    executor：表示使用该参数值对应的线程池；
+    minProcessors：服务器启动时创建的处理请求的线程数；
+    maxProcessors：最大可以创建的处理请求的线程数；
+    acceptCount：指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理。
+
+
+======================disruptor=========================
+1、一个高性能的线程间消息库，一个开源的并发框架
+2、Disruptor是一个高性能的异步处理框架，或者可以认为是最快的消息框架（轻量的JMS），也可以认为是一个观察者模式的实现，或者事件监听模式的实现。
+3、核心部分
+1）ring buffer
+环形的缓冲区。曾经 RingBuffer 是 Disruptor 中的最主要的对象，但从3.0版本开始，其职责被简化为仅仅负责对通过 Disruptor 进行交换的数据（事件）进行存储和更新。
+在一些更高级的应用场景中，Ring Buffer 可以由用户的自定义实现来完全替代。
+2) Sequence Disruptor
+3)Sequencer 
+4) Sequence Barrier
+5)Wait Strategy  定义 Consumer 如何进行等待下一个事件的策略。
+6) Event  在 Disruptor 的语义中，生产者和消费者之间进行交换的数据被称为事件(Event)。它不是一个被 Disruptor 定义的特定类型，而是由 Disruptor 的使用者定义并指定。
+7) EventProcessor EventProcessor 持有特定消费者(Consumer)的 Sequence，并提供用于调用事件处理实现的事件循环(Event Loop)。
+8) EventHandler  Disruptor 定义的事件处理接口，由用户实现，用于处理事件，是 Consumer 的真正实现。
+9) Producer 即生产者，只是泛指调用 Disruptor 发布事件的用户代码，Disruptor 没有定义特定接口或类型。

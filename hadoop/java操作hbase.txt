@@ -1,0 +1,5 @@
+=========java操作hbase======
+https://blog.csdn.net/lr131425/article/details/72621562
+========java hbase增删改查=======
+https://www.cnblogs.com/invban/p/5667701.html
+https://blog.csdn.net/qq_31570685/article/details/51757604

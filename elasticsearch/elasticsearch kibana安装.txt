@@ -1,0 +1,12 @@
+=================elastic kibana安装=======
+一、下载解压
+cd /opt
+wget https://artifacts.elastic.co/downloads/kibana/kibana-5.5.2-linux-x86_64.tar.gz
+tar -xzf kibana-5.5.2-linux-x86_64.tar.gz
+二、编辑配置
+cd /opt/kibana-5.5.2-linux-x86_64
+vi config/kibana.yml
+
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.url: "http://192.168.252.121:9200"

@@ -1,0 +1,12 @@
+============重置root密码========
+1、开机按上下键,阻止进入系统
+2、按'e'键进入编辑状态
+3、将ro recovery nomodeset 改成quiet splash rw single init=/bin/bash
+4、按ctrl+x进入单户模式
+5、在单户模式中进行root用户密码修改
+passwd root
+6、Ctrl+alt+delete 重启系统
+
+=========设置文件为读写权限=====
+mount -o rw 
+remount /

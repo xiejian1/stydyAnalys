@@ -1,0 +1,12 @@
+=======openstack搭建======
+https://blog.csdn.net/shiyu1157758655/article/details/76373341
+=======社区openstack安装教程======
+http://blog.51cto.com/liuleis/2094190
+=======全面认识openstack openstack架构详解===
+https://www.cnblogs.com/klb561/p/8660264.html 
+=======openstack部署步骤详解======
+https://www.cnblogs.com/yaohong/archive/2017/07/29/7251852.html 
+=======openstack 创建项目和虚拟机详细介绍====
+https://www.jb51.net/article/98137.htm
+=======openstack部署教程==========
+https://blog.csdn.net/bbwangj/article/details/79568821

@@ -1,0 +1,8 @@
+============docker+jenkins+webhooks自动化部署实践===============
+https://segmentfault.com/a/1190000014108372
+==========jenkins新手教程=====
+https://segmentfault.com/a/1190000015391418
+==========tomcat部署jenkins=====
+https://segmentfault.com/a/1190000002895521
+==========linux部署jenkins=======
+https://segmentfault.com/a/1190000010311487

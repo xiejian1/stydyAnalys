@@ -1,0 +1,5 @@
+====================redis设置密码=========================
+1、vi redis.conf  #此文件默认在根目录下。
+ requirepass foobared去掉注释，foobared改为自己的密码，我在这里改为
+requirepass 123456
+

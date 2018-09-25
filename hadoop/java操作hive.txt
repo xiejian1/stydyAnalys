@@ -1,0 +1,4 @@
+================java 操作hive=======
+https://www.cnblogs.com/admln/p/hive-java-api-operate.html
+===========java hive增删改查======
+https://blog.csdn.net/hg_harvey/article/details/77688703

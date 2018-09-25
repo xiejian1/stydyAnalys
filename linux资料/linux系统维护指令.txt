@@ -1,0 +1,2 @@
+===============linux系统维护指令========
+cat、tail、sed、awk、perl以及grep

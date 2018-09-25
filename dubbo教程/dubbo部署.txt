@@ -1,0 +1,16 @@
+===========dubbo系统检测====
+https://cdn2.jianshu.io/p/7eb57c8c774b?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+https://blog.csdn.net/quhongwei_zhanqiu/article/details/41896667
+=========dubbo部署服务====
+1、安装jvm虚拟机
+2、dubbo注册中心zookeeper
+3、dubbo服务启动关闭需要使用jar命令或shell脚本
+4、程序上传服务器
+
+======打包方式=====
+1、打包成为jar包
+2、打包成为tar.gz
+在src目录下添加assembly目录并添加assembly.xml文件：
+在pom文件中添加相应的路径
+======修改文件的格式======
+:set ff =unix

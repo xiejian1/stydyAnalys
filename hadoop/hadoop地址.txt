@@ -45,7 +45,7 @@ export   JAVA_HOME=/home/java/jdk1.8
 <property>
    <name>dfs.name.dir</name>
    <value>/root/hadoop/dfs/name</value>
-   <description>Path on the local filesystem where theNameNode stores the namespace and transactions logs persistently.</description>
+   <description>Path on the local filesystem where the NameNode stores the namespace and transactions logs persistently.</description>
 </property>
 <property>
    <name>dfs.data.dir</name>

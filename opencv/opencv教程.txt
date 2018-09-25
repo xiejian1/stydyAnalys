@@ -1,0 +1,9 @@
+==========gui属性========
+1.cv2.imread()  ==读入图像
+1)cv2.IMREAD_COLOR ==读入衣服彩色图片
+2)cv2.IMREAD_GRAYSCALE ==以灰度模式读取
+3)cv3.IMREAD_UNCHANGED ==读入衣服图像
+2.cv2.imshow()  ==  显示图像
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+3.cv2.imwrite()

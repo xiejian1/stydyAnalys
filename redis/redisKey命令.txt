@@ -1,0 +1,16 @@
+===========================
+del key ==删除键
+dump key ==序列化给定的key，并且序列化的值
+exists key ==检查key是否存在
+expire key time ==给key设置过期时间
+expireat key timestamp ==给key设置过期时间，时间参数为unix时间戳
+pexpire key milliseconds ==key的过期时间以毫秒计算
+pexpireat key milliseconds-timestamp ==key过期的时间戳以毫秒计算
+keys pattern ==查找符合的key值
+move key db ==移动key到其他的db中
+persist key ==移除key的过期时间，key将持久化
+pttl key ==以毫秒为单位返回key的过期时间
+randomkey ===随机返回一个key值
+rename key newkey ==修改key的名称
+renamenx key newkey ==当key 不存在时，将key改名为newkey 
+type key ==返回可以所存值得类型

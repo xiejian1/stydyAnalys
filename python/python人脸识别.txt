@@ -1,0 +1,8 @@
+==============python人脸识别============
+https://blog.csdn.net/u012842255/article/details/70340263
+==========人脸识别===========
+https://blog.csdn.net/starzhou/article/details/77856332
+=========python人脸识别开发环境=============
+https://blog.csdn.net/u012842255/article/details/70171617
+========dblib介绍========
+https://www.cnblogs.com/AdaminXie/p/9032224.html

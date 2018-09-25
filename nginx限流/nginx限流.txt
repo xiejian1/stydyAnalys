@@ -1,0 +1,92 @@
+=================限流特技==================
+1、限流：缓存的目的是为了提升系统访问速度和增强系统的处理能力
+2、限流算法
+1）令牌桶
+令牌桶算法是网络流量整形（Traffic Shaping）和速率限制（Rate Limiting）中最常使用的一种算法
+2）漏桶
+漏桶算法的主要目的是控制数据注入到网络的速率，平滑网络上的突发流量
+================API限流=====================
+采用开源工具包guava提供的限流工具类RateLimiter进行API限流，该类基于"令牌桶算法"，开箱即用。
+1）自定义注解
+@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public  @interface ServiceLimit {
+     String description()  default "";
+}
+2）自定义切面
+@Component
+@Scope
+@Aspect
+public class LimitAspect {
+    //每秒只发出100个令牌，此处是单进程服务的限流，内部采用令牌捅算法实现
+    private static   RateLimiter rateLimiter = RateLimiter.create(100.0);
+
+    //Service层切点  限流
+    @Pointcut("@annotation(com.itstyle.seckill.common.aop.ServiceLimit)")  
+    public void ServiceAspect() {
+
+    }
+
+    @Around("ServiceAspect()")
+    public  Object around(ProceedingJoinPoint joinPoint) { 
+        Boolean flag = rateLimiter.tryAcquire();
+        Object obj = null;
+        try {
+            if(flag){
+                obj = joinPoint.proceed();
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
+}
+3)逻辑业务实现
+===============分布式限流===============
+Nginx
+如何使用Nginx实现基本的限流，比如单个IP限制每秒访问50次。通过Nginx限流模块，
+我们可以设置一旦并发连接数超过我们的设置，将返回503错误给客户端。
+#统一在http域中进行配置
+#限制请求
+limit_req_zone $binary_remote_addr $uri zone=api_read:20m rate=50r/s;
+#按ip配置一个连接 zone
+limit_conn_zone $binary_remote_addr zone=perip_conn:10m;
+#按server配置一个连接 zone
+limit_conn_zone $server_name zone=perserver_conn:100m;
+server {
+        listen       80;
+        server_name  seckill.52itstyle.com;
+        index index.jsp;
+        location / {
+              #请求限流排队通过 burst默认是0
+              limit_req zone=api_read burst=5;
+              #连接数限制,每个IP并发请求为2
+              limit_conn perip_conn 2;
+              #服务所限制的连接数(即限制了该server并发连接数量)
+              limit_conn perserver_conn 1000;
+              #连接限速
+              limit_rate 100k;
+              proxy_pass      http://seckill;
+        }
+}
+upstream seckill {
+        fair;
+        server  172.16.1.120:8080 weight=1  max_fails=2 fail_timeout=30s;
+        server  172.16.1.130:8080 weight=1  max_fails=2 fail_timeout=30s;
+}
+
+imit_conn_zone
+
+是针对每个IP定义一个存储session状态的容器。这个示例中定义了一个100m的容器，按照32bytes/session，可以处理3200000个session。
+
+limit_rate 300k;
+
+对每个连接限速300k. 注意，这里是对连接限速，而不是对IP限速。如果一个IP允许两个并发连接，那么这个IP就是限速limit_rate×2。
+
+burst=5；
+
+这相当于桶的大小，如果某个请求超过了系统处理速度，会被放入桶中，等待被处理。如果桶满了，那么抱歉，
+请求直接返回503，客户端得到一个服务器忙的响应。如果系统处理请求的速度比较慢，桶里的请求也不能一直待在里面
+，如果超过一定时间，也是会被直接退回，返回服务器忙的响应。
+

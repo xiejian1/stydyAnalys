@@ -1,0 +1,6 @@
+=================================
+https://blog.csdn.net/moxiaomomo/article/details/78401400?locationNum=7&fps=1
+========elasticsearch官网数据备份迁移=======
+https://blog.csdn.net/u014431852/article/details/52905821
+=======elasticsearch删除恢复======
+https://blog.csdn.net/u014431852/article/details/52905821

@@ -1,0 +1,60 @@
+==========ELK搭建日志分析平台=======
+一、所需的开发工具
+ElasticSearch : elasticsearch-5.5.2
+Logstash : logstash-5.5.2
+kibana：kibana-5.5.2
+JDK: 1.8
+Redis: Redis-4.0.1
+Nginx: 1.9.9
+
+二、各节点的名称
+node1 --> ElasticSearch: 192.168.252.121:9200  
+node2 --> ElasticSearch: 192.168.252.122:9200  
+node3 --> ElasticSearch: 192.168.252.123:9200  
+  
+node4 --> Logstash: 192.168.252.124
+node4 --> nginx: 192.168.252.124
+  
+node5 --> Kibana: 192.168.252.125
+
+node6 --> Redis: 192.168.252.126
+node7 --> Redis: 192.168.252.127
+node8 --> Redis: 192.168.252.128
+三、安装所需要的依赖
+1)jdk 
+2)nignx安装
+=> 安装相应的依赖nignx所需要的依赖
+yum install -y gcc gcc-c++ autoconf automake zlib zlib-devel openssl openssl-devel pcre pcre-devel
+=>编译--->指定编译参数
+$ cd nginx-1.9.9
+$ ./configure 
+=>安装
+$ make
+$ make && make install
+=>检查正确性
+$ /usr/local/nginx/sbin/nginx -t
+=>启动
+$ /usr/local/nginx/sbin/nginx
+=========nignx注意事项=======
+--prefix=/home/nginx \ Nginx安装的根路径,所有其它路径都要依赖该选项
+--sbin-path=/usr/sbin/nginx \ nginx的可执行文件的路径（nginx）
+--user=nginx \ worker进程运行的用户
+--group=nginx \ worker进程运行的组
+--conf-path=/etc/nginx/nginx.conf \  指向配置文件（nginx.conf）
+--error-log-path=/var/log/nginx/error.log \ 指向错误日志目录
+--http-log-path=/var/log/nginx/access.log \  设置主请求的HTTP服务器的日志文件的名称
+--with-http_ssl_module \  使用https协议模块。默认情况下，该模块没有被构建。前提是openssl与openssl-devel已安装
+--with-http_gzip_static_module \  启用ngx_http_gzip_static_module支持（在线实时压缩输出数据流）
+--with-http_stub_status_module \  启用ngx_http_stub_status_module支持（获取nginx自上次启动以来的工作状态）
+--with-http_realip_module \  启用ngx_http_realip_module支持（这个模块允许从请求标头更改客户端的IP地址值，默认为关）
+--pid-path=/var/run/nginx.pid \  指向pid文件（nginx.pid）
+
+设置PCRE库的源码路径，如果已通过yum方式安装，使用–with-pcre自动找到库文件。使用–with-pcre=PATH时，需要从PCRE网站下载pcre库的源码（版本4.4 – 8.30）并解压，剩下的就交给Nginx的./configure和make来完成。perl正则表达式使用在location指令和 ngx_http_rewrite_module模块中。
+--with-pcre=/home/software/pcre-8.35 \ 
+
+指定 zlib（版本1.1.3 – 1.2.5）的源码解压目录。在默认就启用的网络传输压缩模块ngx_http_gzip_module时需要使用zlib 。
+--with-zlib=/home/software/zlib-1.2.8 \
+
+指向openssl安装目录
+--with-openssl=/home/software/openssl-1.0.1i
+3)redis

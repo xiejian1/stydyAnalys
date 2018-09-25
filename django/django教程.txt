@@ -1,0 +1,95 @@
+========Django教程============
+http://www.runoob.com/django/django-model.html
+========自动化运维============
+https://www.cnblogs.com/xiaozhiqi/p/5851360.html
+===========django安装=========
+1、下载 django进行安装 
+下载 Django 压缩包，解压并和Python安装目录放在同一个根目录，进入 Django 目录，执行python setup.py install，然后开始安装，Django将要被安装到Python的Lib下site-packages。 
+2、添加环境变量
+C:\Python33\Lib\site-packages\django;C:\Python33\Scripts。 添加完成后就可以使用Django的django-admin.py命令新建工程了
+3、创建django目录
+django-admin.py startproject name
+django-admin startproject name
+4、启动服务
+cd name 
+python manage.py runserver 0.0.0.0:port
+==创建一个APP
+django-admin startapp name
+5、工程目录的介绍
+setting.py ==django项目的设置/配置
+urls.py  ==django项目的url声明，有django驱动的网站的目录
+wsgi.py  ==wsgi兼容的web服务器的入口，以便运行项目
+6、regex:正则表达式 url路径
+   view 映射的视图
+   kwargs 视图使用的字典类型的参数
+   name 反射获取url路径
+
+
+7、django模板template
+1)标签 if/else 
+{%if condition%}
+{%endif%}
+或者
+{%if condigtion %}
+display
+{%elif condition%}
+display
+{%else%}
+display
+{%endif%}
+====支持and or not关键字
+
+2)for循环迭代
+{%for i in list%}
+{%endfor%}
+
+3)ifequal/ifnoteequal
+{%ifequal%} ==比较两个值
+  display
+{%else%}
+{%endifequal%}
+4)过滤器
+{{name|lower}} ==文档被小写后输出
+upper ==大写
+turncatewords ==显示字符
+addslashes===添加反斜杠
+date ===按指定的格式字符串格式化date或datetime对象
+length =返回变量的长度
+
+5）include标签
+{%include%}  ==允许在模板中包含其他模板的内容
+
+6)模板可以用继承的方式复用
+
+7) Django模型
+数据库配置
+settings.py中配置
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # 或者使用 mysql.connector.django
+        'NAME': 'test',
+        'USER': 'test',
+        'PASSWORD': 'test123',
+        'HOST':'localhost',
+        'PORT':'3306',
+    }
+}
+==定义模型
+django-admin startapp name
+
+===修改mmodels.py文件
+其中的一个类就代表了一个class =>table
+以上的类名代表了数据库表名，且继承了models.Model，类里面的字段代表数据表中的字段(name)，数据类型则由CharField（相当于varchar）、DateField（相当于datetime）， max_length 参数限定长度。
+
+===在settings.py中注册app
+INSTALLED_APPS =(APP)
+
+===创建表结构
+$python manage.py migrate   # 创建表结构
+$ python manage.py makemigrations TestModel  # 让 Django 知道我们在我们的模型有一些变更
+$ python manage.py migrate TestModel   # 创建表结构
+
+====开启Django Admin 管理工具
+python manage.py createsuperuser ==创建超级用户
+====注册数据模型====
+admin.site.register(models)

@@ -1,0 +1,65 @@
+=========elasticsearch日志分析平台=======
+一、安装logstash
+cd /opt
+wget https://artifacts.elastic.co/downloads/logstash/logstash-5.5.2.tar.gz
+tar -xzf logstash-5.5.2.tar.gz
+二、测试logstash
+/opt/logstash-5.5.2/bin/logstash -e 'input{stdin{}}output{stdout{codec=>rubydebug}}'
+三、开启logstash agent代理
+vi /usr/local/nginx/conf/nginx.conf
+在nginx.conf 中设置日志格式：logstash
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+四、负责收集nginx访问日志信息传送到redis队列上
+cd /opt/logstash-5.5.2
+mkdir etc
+vi /opt/logstash-5.5.2/etc/logstash_agent_nginx.conf
+input {
+    file {
+                type => "nginx_access_log"
+                path => "/usr/local/nginx/logs/access.log"
+    }
+}
+output {
+        redis {
+                host => "192.168.252.126"
+                data_type => "list"
+                port => "6379"
+                key => "logstash:redis"
+        }
+}
+多日志文件
+path => [ "/usr/local/nginx/logs/*.log", "/var/log/messages.log", "/var/log/syslog.log" ]
+五、开启logstash indexer
+cd /opt/logstash-5.5.2
+mkdir etc
+vi /opt/logstash-5.5.2/etc/logstash_indexer.conf 
+input {
+        redis {
+                host => "192.168.252.126"
+                data_type => "list"
+                port => "6379"
+                key => "logstash:redis"
+                type => "redis-input"
+        }
+}
+
+output {
+    elasticsearch {
+        hosts => ["192.168.252.121:9200"]
+        index => "logstash-%{type}-%{+YYYY.MM.dd}"
+        document_type => "%{type}"
+        flush_size => 20000
+        idle_flush_time => 10
+        sniffing => true
+        template_overwrite => true
+    }
+}
+批量发送Elasticsearch，本插件的 flush_size 和 idle_flush_time 两个参数共同控制 Logstash 向 Elasticsearch 发送批量数据的行为。
+六、启动服务
+启动 logstash agent logstash 代理收集日志发送 Redis
+nohup /opt/logstash-5.5.2/bin/logstash -f /opt/logstash-5.5.2/etc/logstash_agent_nginx.conf --path.data=/opt/logstash-5.5.2/logs/log1 > /dev/null 2>&1 &
+启动 logstash indexer logstash 读 Redis 日志发送到Elasticsearch
+nohup /opt/logstash-5.5.2/bin/logstash -f /opt/logstash-5.5.2/etc/logstash_indexer.conf --path.data=/opt/logstash-5.5.2/logs/log2 > /dev/null 2>&1 &

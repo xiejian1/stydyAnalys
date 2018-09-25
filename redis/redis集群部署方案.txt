@@ -1,0 +1,58 @@
+=================redis集群部署方案=================
+一、主机部方案
+1、解压文件
+tar -zxvf redis-3.2.6.tar.gz
+mv redis-3.2.6 /usr/local/redis3.0
+cd /usr/local/redis3.0
+make
+
+2、创建集群所需要的目录
+mkdir -p /usr/local/cluster
+cd /usr/local/cluster
+mkdir 7000
+mkdir 7001
+
+3、修改配置文件redis.conf
+cp /usr/local/redis3.0/redis.conf /usr/local/cluster
+vi redis.conf
+##修改配置文件中的下面选项
+
+pidfile /var/run/redis.7000.pid #个性化
+port 7000 #个性化
+daemonize yes
+cluster-enabled yes
+cluster-config-file nodes.7000.conf #个性化
+cluster-node-timeout 5000
+appendonly yes
+appendfilename "appendonly.7000.aof" #个性化
+
+4、将文件复制到其他的机器上
+cp /usr/local/cluster/redis.conf /usr/local/cluster/7000
+
+5、执行redis的创建集群命令创建集群
+安装ruby ,因为./redis-trib.rb 是执行的ruby的脚本，需要ruby的环境
+sudo apt-get install ruby
+为了执行 redis-trib.rb 需要安装 输入命令：sudo gem install redis 可能会有长城防火墙的问题
+#可以去https://rubygems.org/gems/redis/versions/3.2.2 下载最新版本。
+#然后用命令 sudo gem install redis-3.2.2.gem
+cd /usr/local/redis3.0/src
+./redis-trib.rb  create --replicas 1 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005
+
+=====启动之后的配置
+1）Nodes configuration updated
+2）Assign a different config epoch to each node
+3）Sending CLUSTER MEET messages to join the cluster
+4）Performing Cluster Check (using node 127.0.0.1:7000)
+
+
+
+===============================redis主从复制机制=================================
+1、哨兵机制
+同时监控多个master,当有master宕机之后就会自动切换为master
+slaveof 127.0.0.1 6000  --从机配置
+masterauth 123456  --验证密码
+
+----主从切换
+port 26379
+sentinel monitor mymaster 127.0.0.1 6000 2
+sentinel auth-pass mymaster 123456

@@ -11,4 +11,6 @@ tornado.ioloop.IOLoop.instance().start()  --接收数据
 3、内建的各种方法
 1）get_argument()  --获取参数
 2) write() --以字符串作为参数，返回给HYYP请求
-3）
+3）使用mongodb进行数据的存储
+然后我们在我们的TornadoApplication对象的init方法中实例化了一个pymongo连接对象。
+我们在Application对象中创建了一个db属性，指向MongoDB的example数据库

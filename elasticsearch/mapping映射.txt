@@ -1,0 +1,41 @@
+=======mapping在elasticsearch中的作用就是约束======
+1、type ==指定数据的类型
+2、index ===指定分词器
+1）analyzer ==首先分析这个字段，然后索引，以全文形式索引这个字段
+2）not_analyzed ==索引这个字段，使之可以被索引，索引内容的指定值不一致，不分析此字段
+3）no 不索引这个字段，这个字段不能被索引到
+3、 analyzer ====分析器，指定一种分析器将在搜索和索引的时候使用
+分析(analysis)是这样一个过程：
+首先，表征化一个文本块为适用于倒排索引单独的词(term)
+然后标准化这些词为标准形式，提高它们的“可搜索性”或“查全率”
+这个工作是分析器(analyzer)完成的。一个分析器(analyzer)只是一个包装用于将三个功能放到一个包里：
+1) whitespace 
+2) simple
+3) english
+4、字符过滤器
+filter
+首先字符串经过字符过滤器(character filter)，它们的工作是在表征化（译者注：这个词叫做断词更合适）前处理字符串。
+字符过滤器能够去除HTML标记，或者转换"&"为"and"。
+5、分词器
+下一步，分词器(tokenizer)被表征化（断词）为独立的词。一个简单的分词器(tokenizer)可以根据空格或逗号将单词分开
+6、表征过滤
+最后，每个词都通过所有表征过滤(token filters)，它可以修改词（例如将"Quick"转为小写），
+去掉词（例如停用词像"a"、"and"``"the"等等），或者增加词（例如同义词像"jump"和"leap"）
+7、内建分析器
+1) 标准分析器
+2) 简单分析器
+3)空格分析器
+4）
+=======更新映射=====
+mapping 相当于数据模型 index 相当于database type相当于table mapping相当于表的字段
+第一次创建的时候，指定映射的类型
+为新类型添加映射
+这展示给了我们字段的映射（叫做属性(properties)），这些映射是Elasticsearch在创建索引时动态生成的：
+一个mapping由一个或多个analyzer组成， 一个analyzer又由一个或多个filter组成的。
+=========elasticsearch分词库========
+https://www.sojson.com/blog/82.html
+https://www.cnblogs.com/shaosks/p/7592229.html
+=========elasticsearch移除HTML标签=====
+https://www.elastic.co/guide/en/elasticsearch/reference/5.6/analysis-custom-analyzer.html
+=========indices包=======
+put mapping可以给一个已存在的索引增加type的mapping，也可以给一个存在的type增加字段的mapping。

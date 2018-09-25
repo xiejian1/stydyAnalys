@@ -1,0 +1,7 @@
+=====================redis订阅=====================
+1、Psubscribe  订阅一个或多个符合给定模式的频道，it* 作为匹配规则
+2、Pubsub 查看预发布系统的状态，他由数个不同格式的子命令组成
+3、publish channle 将信息发送的指定的频道
+4、punsubscribe channle 退订所有给定模式的频道
+5、subscribe channle 用于订阅给定的一个或多个频道的信息
+6、Unsubscribe channle 用于退订给定的一个或多个频道的信息

@@ -1,2 +1,34 @@
+=========python字符串详解======
+https://blog.csdn.net/Liveor_Die/article/details/78405779
 ======首字母大写======
 str.title()
+''.join() ==字符串连接函数
+‘sep’.join(seq)
+参数说明
+sep：分隔符。可以为空
+seq：要连接的元素序列、字符串、元组、字典
+上面的语法即：以sep作为分隔符，将seq所有的元素合并成一个新的字符串
+===========str.sub字符串替换===========
+re.sub(pattern, repl, string) 
+对于输入的一个字符串，利用正则表达式（的强大的字符串处理功能），去实现（相对复杂的）字符串替换处理，然后返回被替换后的字符串
+pattern，表示正则中的模式字符串
+repl，就是replacement，被替换的字符串的意思。repl可以是字符串，也可以是函数
+string，即表示要被处理，要被替换的那个string字符串。
+===========str字符串判断======
+    strcmp(sStr1,sStr2) #比较字符串
+    S.startswith(prefix[,start[,end]]) #是否以prefix开头
+    S.endswith(suffix[,start[,end]]) #以suffix结尾
+    S.isalnum() #是否全是字母和数字，并至少有一个字符
+    S.isalpha() #是否全是字母，并至少有一个字符
+    S.isdigit() #是否全是数字，并至少有一个字符
+    S.isspace() #是否全是空白字符，并至少有一个字符
+    S.islower() #S中的字母是否全是小写
+    S.isupper() #S中的字母是否便是大写
+    S.istitle() #S是否是首字母大写的、
+========str字符串查找===============
+S.find(substr, [start, [end]]) #返回S中出现substr的第一个字母的标号，如果S中没有substr则返回-1。start和end作用就相当于在S[start:end]中搜索
+S.index(substr, [start, [end]]) #与find()相同，只是在S中没有substr时，会返回一个运行时错误
+S.rfind(substr, [start, [end]]) #返回S中最后出现的substr的第一个字母的标号，如果S中没有substr则返回-1，也就是说从右边算起的第一次出现的substr的首字母标号
+S.rindex(substr, [start, [end]])
+S.count(substr, [start, [end]]) #计算substr在S中出现的次数
+

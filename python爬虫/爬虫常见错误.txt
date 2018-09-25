@@ -1,0 +1,11 @@
+1、提取多层嵌套标签的所有文本
+#如果text()前面使用两个反斜杠：sel.xpath("//p[@id='test']//text()").extract()
+response.xpath("//p[@id='test']").xpath('string(.)').extract()
+line = line.replace('\n ','').replace('\t','') 
+# 移除标签
+content = remove_tags(value)
+=============================
+p = re.compile('<[^>]+>') 
+print (p.sub("", html))
+# [^>] 是匹配除了>的所有字符
+# + 表示贪婪模式

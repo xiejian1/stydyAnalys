@@ -1,0 +1,6 @@
+==========================pythonµ½´¦requirments==========================
+1¡¢
+pip freeze > requirements.txt
+2¡¢
+pip install pipreqs
+pipreqs .
