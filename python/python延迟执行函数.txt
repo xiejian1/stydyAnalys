@@ -1,0 +1,12 @@
+============python 延迟执行===============
+方法一
+def test_onetime_delay(myname,secName):
+    print(myname,secName)
+threading.Timer(5,test_onetime_delay,["andygllin","thetwoname"]).start()#延迟5秒执行一次 
+方法二
+def func(a):
+    print time.time(),"Hello Sched!",a
+# 2为延后时间，1为优先级，func为函数名，("test1",)为函数参数
+s.enter(2,1,func,("test1",))
+s.enter(2,0,func,("test2",))
+s.run()

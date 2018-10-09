@@ -1,0 +1,73 @@
+=====================================
+1、celery的消息路由机制，提到AMQP
+可以有多个"消息队列"（message Queue），不同的消息可以指定发送给不同的Message Queue，
+而这是通过Exchange来实现的，发送消息到"消息队列"中时，可以指定routiing_key，
+Exchange通过routing_key来吧消息路由（routes）到不同的"消息队列"中去。
+exchange 对应 一个消息队列(queue)，即：通过"消息路由"的机制使exchange对应queue，每个queue对应每个worker
+==========================
+from celery import Celery
+app = Celery()
+app.config_from_object("celeryconfig")
+@app.task
+def taskA(x, y):
+    return x * y
+@app.task
+def taskB(x, y, z):
+    return x + y + z
+@app.task
+def add(x, y):
+    return x + y
+==========================
+from kombu import Queue
+BORKER_URL = "redis://192.168.48.131:6379/1"				#1库
+CELERY_RESULT_BACKEND = "redis://192.168.48.131:6379/2"	#2库
+CELERY_QUEUES = {
+    Queue("default", Exchange("default"), routing_key = "default"),
+    Queue("for_task_A", Exchange("for_task_A"), routing_key = "for_task_A"),
+    Queue("for_task_B", Exchange("for_task_B"), routing_key = "for_task_B")
+}
+#路由
+CELERY_ROUTES = {
+    "demon3.taskA":{"queue": "for_task_A",  "routing_key": "for_task_A"},
+    "demon3.taskB":{"queue": "for_task_B",  "routing_key": "for_task_B"}
+}
+==========================
+# celery -A demon3 worker -l info -n workerA.%h -Q for_task_A
+
+============远端客服调用==============
+from demon3 import *
+r1 = taskA.delay(10, 20)
+print (r1.result)
+print (r1.status)
+r2 = taskB.delay(10, 20, 30)
+time.sleep(1)
+prnit (r2.result)
+print (r2.status)
+#print (dir(r2))
+r3 = add.delay(100, 200)
+print (r3.result)
+print (r3.status)#PENDING
+=============定时任务================
+CELERY_TIMEZONE = 'UTC'
+CELERYBEAT_SCHEDULE = {
+    'taskA_schedule' : {
+        'task':'tasks.taskA',
+        'schedule':20,
+        'args':(5,6)
+    },
+'taskB_scheduler' : {
+    'task':"tasks.taskB",
+    "schedule":200,
+    "args":(10,20,30)
+    },
+'add_schedule': {
+    "task":"tasks.add",
+    "schedule":10,
+    "args":(1,2)
+    }
+}
+===============================
+celery -A demon3 worker -l info -n workerA.%h -Q for_task_A
+celery -A demon3 worker -l info -n workerB.%h -Q for_task_B
+celery -A tasks worker -l info -n worker.%h -Q celery
+celery -A demon3 beat

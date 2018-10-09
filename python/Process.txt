@@ -3,7 +3,7 @@
 2、Process可以直接实例化然后用start调用，需要指定新的进程执行的函数，用元组的方式传递参数
 3、进程对象的join方法会让主线程阻塞，直到子进程执行结束才往下执行，timeout参数可以指定超时时间
 4、Process实现的进程，主进程会等所有子进程执行完毕之后才关闭
-5、类似Java多线程实现方式，继承Process类，重写run方法，然后实例化，再掉start方法
+5、类似Java多线程实现方式，继承Process类，重写run方法，然后实例化，再调用start方法
 def test(arg):
     print(arg)
     time.sleep(4)

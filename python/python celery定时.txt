@@ -1,0 +1,126 @@
+==================python celery定时 配置文件中================
+//celeryconfig.py
+from datetime
+import timedelta
+
+
+CELERYBEAT_SCHEDULE = {
+	//这个add也可以是别的名字，就是给任务起个名字
+    
+'add': {
+        'task': 'celerytasks.add',
+ 
+       'schedule': timedelta(seconds=3),
+      
+  	'args': (16, 16)
+    }
+
+}
+===================python celery 定时程序中指定===============================
+//celerytasks.py
+from celery 
+import Celery
+
+ 
+//第一个tasks是给Celery对象起了个名字
+
+app = Celery('tasks',broker='amqp://myuser:mypassword@localhost/myvhost',backend='amqp')
+
+
+app.config_from_object('celeryconfig')
+
+@app.task
+def add(x,y):
+
+return x+y
+=================================================
+（1）在配置文件中指定；（2）在程序中指定。
+# cele.py
+import celery
+
+
+app = celery.Celery('cele', broker='redis://localhost:6379'）
+
+
+
+@app.task
+def 
+send(message):
+    
+ return message
+
+
+
+app.conf.beat_schedule = {
+    
+'send-every-10-seconds': {
+        
+	'task': 'cele.send',
+	
+'schedule': 10.0,
+	
+'args': ('Hello World', )
+    
+},
+
+}
+===============================================
+from celery.schedules 
+import crontab
+
+# 每分钟执行一次
+
+c1 = crontab()
+
+# 每天凌晨十二点执行
+
+c2 = crontab(minute=0, hour=0)
+
+# 每十五分钟执行一次
+
+crontab(minute='*/15')
+
+# 每周日的每一分钟执行一次
+
+crontab(minute='*',hour='*', day_of_week='sun')
+
+# 每周三，五的三点，七点和二十二点没十分钟执行一次
+
+crontab(minute='*/10',hour='3,17,22', day_of_week='thu,fri')
+===============================================
+from celery import Celery
+from celery.schedules 
+import crontab
+
+
+app = Celery()
+
+
+@app.on_after_configure.connect
+
+def setup_periodic_tasks(sender, **kwargs):
+    
+	# Calls test('hello') every 10 seconds.
+    
+sender.add_periodic_task(10.0, test.s('hello'), name='add every 10')
+
+    # Calls test('world') every 30 seconds
+    
+sender.add_periodic_task(30.0, test.s('world'), expires=10)
+
+    # Executes every Monday morning at 7:30 a.m.
+    
+sender.add_periodic_task(
+crontab(hour=7, minute=30, day_of_week=1),
+test.s('Happy Mondays!'),
+    )
+
+
+@app.task
+def 
+test(arg):
+    
+  print(arg)
+==============================================
+celery -A cele beat
+
