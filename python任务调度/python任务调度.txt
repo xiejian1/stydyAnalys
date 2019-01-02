@@ -1,0 +1,43 @@
+====================python多任务调度==================
+方案一
+1、使用扩展插件schedule
+import schedule 
+
+schedule = schedule.Schedule()
+def myJob1():
+   print('Job1:我10秒执行依次，每次执行3秒钟')
+toCancel = schedule.every(10).seconds().do(myJob1)
+==minutes  ==每秒钟
+==day ==每天
+============
+方案二、
+def cancelTest():
+ for _  in range(200):
+   time.sleep(1)
+ print('我取消一了个任务')
+ schedule.cancel_job(toCancel)
+threading.Thread(target=cancelTest).start() 
+
+========
+教程
+schedule.every(10).minutes.do(job)
+schedule.every().hour.do(job)
+schedule.every().day.at("10:30").do(job)
+schedule.every(5).to(10).days.do(job)
+schedule.every().monday.do(job)
+schedule.every().wednesday.at("13:15").do(job)
+
+======
+schedule.run_pending()是保持schedule一直运行，去查询上面那一堆的任务，在任务中，就可以设置不同的时间去运行。跟crontab是类似的
+======
+用多线程/多进程。不要幼稚地问我“python中的多线程不是没有用吗？”这是两码事。开了一条线程，就把job独立出去运行了，不会占主进程的cpu时间，schedule并没有花掉执行一个任务的时间，它的开销只是开启一条线程的时间，所以，下一次执行就变成了10秒后而不是12秒后。
+ def job1_task():
+    threading.Thread(target=job1).start()
+def job2_task():
+    threading.Thread(target=job2).start()
+def run():
+    schedule.every(10).seconds.do(job1_task)
+    schedule.every(10).seconds.do(job2_task)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

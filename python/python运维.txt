@@ -1,0 +1,11 @@
+===========ssh 免密码登录=====
+1、ssh-kengen -t rsa
+2、直接按回车
+3、修改.ssh权限 chmod 700 ~/.ssh chmod 600 ~/.ssh/authorized_keys
+4、ssh-copy-id -i ~/.ssh/-id_rsa.pub remote_ip
+5、ssh ip 登录进入
+
+6、复制本地的指令到远程操作的机制。
+scp /root/.ssh/id_rsa.pub root@139.159.140.183:/home/ubuntu/tmp
+cat tmp/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys 
+	

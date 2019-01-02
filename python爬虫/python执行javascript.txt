@@ -1,0 +1,25 @@
+==========python 执行javascript代码========
+import PyV8
+
+class Test():
+
+    　　def js(self):        
+
+　　　ctxt = PyV8.JSContext()        
+
+　　　ctxt.enter()               
+
+　　　func = ctxt.eval('''(function(){return '###'})''')        
+
+　　　print func()        
+
+　　　print '213'
+===========python 执行javascript=================
+pip install pyexecjs
+import execjs
+execjs.eval() ----执行函数
+jsFunc = '''function add(x,y){
+ return x+y
+}'''
+jsContext = execjs.complie(jsFunc)
+jsContext.call("add",3,5)

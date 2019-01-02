@@ -1,0 +1,56 @@
+===============css样式表==============
+1、id选择器
+#idname{}
+2、class选择器
+.name{}
+3、优先级
+ 一般情况下，优先级如下：
+内联样式）Inline style > （内部样式）Internal style sheet >（外部样式）External style sheet > 浏览器默认样式
+===============css背景=================
+background-color ==背景颜色
+background-image ==背景图片
+background-repeat==是否背景重复
+background-attachment ==
+background-position ==背景的位置
+===============css文本=================
+1、color ==设置文本颜色
+2、direction ==设置文本方向
+3、letter-spacing ==设置字符间距
+4、line-height ==设置行高
+5、text-align ==对齐元素中的文本
+6、text-decoration ==向文本添加修饰
+7、text-indent 缩进元素中的文本首行
+8、text-shadown ==设置文本阴影
+9、text-transform ==控制元素中的字母
+10、vertical-align ==设置元素的垂直对其
+============css 字体================
+1、font-family ==字体系列
+2、font-style ==字体样式
+3、font-site ==字体大小
+4、font-weight ==字体加粗
+=============css 链接=================
+1、a:link ==正常
+2、a:visited ==已访问过的
+3、a:hover ==鼠标移动到连接上
+4、a:active ==鼠标点击时 
+=============css ul标签=====================
+1、list-style-type  ==列表项标记的类型
+2、list-style-image  ==列表标记的图像
+3、list-style-position ==列表标记的位置
+=============css table标记============
+1、border  ==边框
+2、border-collapse ==设置表格的边框是否被折叠成一个单一的边框或隔开
+3、width ==设置表格的宽度和高度
+4、height
+5、text-align  ==设置文本的对齐
+6、vertical-align ==垂直对其
+7、padding ==控制空格之间的边距
+============css 盒子模型=============
+1、margin  ==清除边框外的区域，外边距是透明的。
+2、border  ==围绕在内边距和内容外的边框。
+3、padding ==清除内容周围的区域，内边距是透明的。
+4、content ==盒子的内容，显示文本和图像。
+============css border标签===========
+1、border-style ==边框样式
+2、border-width ==边框宽度
+3、border-color ==颜色

@@ -1,0 +1,41 @@
+============kafka搭建===========
+1、安装java环境变量
+2、kafka安装
+# 解压
+sudo tar -zxvf kafka_2.12-1.0.0.tgz
+
+3、配置kafka
+#创建日志存放目录
+cd /opt/kafka
+mkdir -p log/kafka
+#修改配置文件/opt/kafka/config/server.properties
+sudo vim /opt/kafka/config/server.properties
+#主要修改下面几项内容如下：
+broker.id=181
+listeners = PLAINTEXT://127.0.0.1:9092  ==更改为外网ip
+advertised.listeners= PLAINTEXT://127.0.0.1:9092 ==与上一个保持一致
+log.dirs=/opt/kafka/log/kafka
+zookeeper.connect=127.0.0.1:2181  ==更改为公网地址
+
+listeners：启动kafka服务监听的ip和端口，可以监听内网ip和0.0.0.0
+advertised.listeners：生产者和消费者连接的地址，kafka会把该地址注册到zookeeper中，所以只能为除0.0.0.0之外的合法ip或域名 ，
+默认和listeners的配置一致。
+4、配置环境变量
+5、zookeeper安装
+上传zookeeper压缩文件并且解压
+tar -zxvf zookeeper-3.4.10.tar.gz
+进入解压文件 zookeeper-3.4.10编辑配置文件
+cd zookeeper-3.4.10/conf
+复制zoo_sample.cfg 拷贝一份
+ cp zoo_sample.cfg zoo.cfg 
+编辑文件
+tickTime=2000
+initLimit=10 
+syncLimit=5 
+dataDir=/usr/local/zookeeper/data 
+dataLogDir=/usr/local/zookeeper/logs 
+clientPort=2181 //下面的ip也可以用hosts别名zookeeper-01 
+server.1=192.168.104.156:2888:3888 
+server.2=192.168.104.157:2888:3888 //其中2888是zookeeper服务之间通信的端口 //3888是zookeeper与其他应用程序通信端口
+
+

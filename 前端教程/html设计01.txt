@@ -1,0 +1,91 @@
+===============html设计01================
+1、form 表单
+1) 文本域字段
+input  type=text name 
+2) 密码 
+input type=password
+3) textarea 文本域
+4）radio-button 单选框
+5）checkboxes 复选框 checked
+6）submit 提交按钮
+7）简单的下拉列表
+select name 
+option value
+8) 预选按钮
+selected 预选按钮
+9） iframe html框架 height width 定义宽度和高度
+frameborder 定义边框
+--> frameset 标签定义一个框架集。里面组织frame元素
+<frameset rows="25%,*">
+  <frame src="frame_a.htm">
+  <frameset cols="25%,75%">
+    <frame src="frame_b.htm">
+    <frame src="frame_c.htm">
+  </frameset>
+</frameset>
+10） 使用iframe来显示目标连接页面
+name 定义链接
+2、video 播放视频
+3、audio 播放音频
+4、article 标签 定义页面的独立的内容
+5、aside 定义页面的额侧边栏内容
+6、dialog 标签，定义对话框
+7、footer 定义section部分
+8、header定义文档的头部区域
+9、nav 定义导航的连接部分
+10、canvas 画布
+11、SVG
+12、拖拽元素
+function allowDrop(ev)
+{
+	ev.preventDefault();
+}
+
+function drag(ev)
+{
+	ev.dataTransfer.setData("Text",ev.target.id);
+}
+
+function drop(ev)
+{
+	ev.preventDefault();
+	var data=ev.dataTransfer.getData("Text");
+	ev.target.appendChild(document.getElementById(data));
+}
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<img id="drag1" src="/images/logo.png" draggable="true" ondragstart="drag(event)" width="336" height="69">
+dragable =true设置元素可以拖放
+ondragstart setdata() ->ondragstart点用了一个函数，drag(event),规定被拖动的数据
+dataTransfer.setData() 方法设置被拖数据的数据类型和值：
+ondragover 在何处放置被拖动的元素
+ondrop 当放置被拖数据时，会发生 drop 事件。
+===================geolocation==================
+var x=document.getElementById("demo");
+function getLocation()
+{
+	if (navigator.geolocation)
+	{
+		navigator.geolocation.getCurrentPosition(showPosition);
+	}
+	else
+	{
+		x.innerHTML="该浏览器不支持获取地理位置。";
+	}
+}
+function showPosition(position)
+{
+	x.innerHTML="纬度: " + position.coords.latitude + 
+	"<br>经度: " + position.coords.longitude;	
+}
+=============web存储=================
+13、localStorage 长久保存真个网站的数，保存的数据没有过期时间，手动删除
+14、sessionStorage 临时保存统一窗口的数据，在窗口关闭的时候，删除数据
+localStorage.sitename="菜鸟教程";
+删除数据  
+localStorage.removeItem(""sitename");
+
+    保存数据：localStorage.setItem(key,value);
+    读取数据：localStorage.getItem(key);
+    删除单个数据：localStorage.removeItem(key);
+    删除所有数据：localStorage.clear();
+    得到某个索引的key：localStorage.key(index);

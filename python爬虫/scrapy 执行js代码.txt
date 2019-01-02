@@ -1,0 +1,33 @@
+====================scrapy 执行js=============
+1、安装：scrapy-splash
+pip install scrapy-splash
+2、在scrapy_splash中定义了一个SplashRequest类，用户只需使用scrapy_splash.SplashRequst来替代scrapy.Request发送请求
+该构造器常用参数如下：
+url---待爬取的url地址
+headers---请求头
+cookies---cookies信息
+args---传递给splash的参数，如wait\timeout\images\js_source等
+endpoint---Splash服务端点
+splash_url---Splash服务器地址，默认为None
+
+================splash服务器的配置=============
+1、安装：scrapy-splash
+pip install scrapy-splash
+2、在scrapy_splash中定义了一个SplashRequest类，用户只需使用scrapy_splash.SplashRequst来替代scrapy.Request发送请求
+Splash服务器地址
+SPLASH_URL = 'http://localhost:8050'                                                                      
+#开启两个下载中间件，并调整HttpCompressionMiddlewares的次序                                               
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware':725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware':810,                         
+}
+#设置去重过滤器
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+#用来支持cache_args（可选）
+SPIDER_MIDDLEWARES = {
+    'scrapy_splash.SplashDeduplicateArgsMiddleware':100,
+}
+DUPEFILTER_CLASS ='scrapy_splash.SplashAwareDupeFilter'
+HTTPCACHE_STORAGE ='scrapy_splash.SplashAwareFSCacheStorage'   
+==================webkit库javascript渲染服务=================     

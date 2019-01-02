@@ -1,0 +1,6 @@
+===================python图像处理=====================
+https://blog.csdn.net/K_Ohaha/article/details/78838134
+====================pillow入门========================
+http://python.jobbole.com/84956/
+=====================python 图像处理操作=================================
+https://www.cnblogs.com/xk-bench/p/7825290.html

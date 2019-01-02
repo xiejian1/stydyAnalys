@@ -1,0 +1,53 @@
+=================js设计====================
+1、javascript 事件 点击按钮时触发 onclick事件
+2、onchange 元素改变时
+3、onmouseover 在一个元素上移动鼠标
+4、从一个元素上移开鼠标
+5、onkeydown 用户 按下键盘键
+6、onload 浏览器加载完成
+===============字符串================
+prototype  ==允许像字符串添加属性和方法
+charAt() ==返回指定索引位置的字符
+concat() ==连接两个或多个字符串
+indexOf() ==返回字符串中检索指定字符第一次出现的位置
+lastIndexOf() ==返回字符串中检索指定字符最后一次出现的位置
+match() ==找到一个或多个正则表达式的匹配
+replace() ==替换与正则表达式匹配的值
+search() ==检索与正则表达式匹配的值
+split()  ==把字符串分割为字符串数组
+substr() ==从起始字符串提起指定数目的字符
+substring() ==提取字符串中两个指定的索引号之间的字符
+toLowerCase() ==小写
+toUpperCase() ==大写
+trim() ==移除字符串首尾空白
+===============js数据类型===================
+1、typeof 
+2、值变量 null undefined
+3、两者的区别
+ typeof undefined             // undefined
+typeof null                  // object
+null === undefined           // false
+null == undefined            // true
+=================js运算符===================
+1、===   绝对等于（值和类型均相等）
+2、类型转换
+使用javascript函数
+通过自身自动转换
+String(123)
+x.tostring()
+==将日期转换为字符
+obj= new Date()
+obj.tostring()
+getDate()
+getDay()
+getFullYear()
+getHours()
+getMilliseconds()
+getMinutes()
+getSeconds()
+getTime()
+===将字符串转换为数字
+number(str
+parseInt()
+=============javascript对象=====================
+1、时间，日期，数组，函数

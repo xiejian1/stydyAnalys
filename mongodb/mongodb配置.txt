@@ -1,0 +1,36 @@
+./mongod--dbpath=/root/mongo/mongodb/data/db --logpath=/root/mongo/mongodb/log/logs--logappend --bind_ip=0.0.0.0 --auth --port=27017 –fork &
+
+==========================
+use test
+
+switched to db test
+
+添加test库的账户
+
+> db.createUser({user:'test',pwd:'mongodb',roles:[{role:'dbOwner', db:'test'}]});
+
+说明：
+roles的可选项有：
+1. 数据库用户角色：read、readWrite;
+2. 数据库管理角色：dbAdmin、dbOwner、userAdmin；
+3. 集群管理角色：clusterAdmin、clusterManager、clusterMonitor、hostManager；
+4. 备份恢复角色：backup、restore；
+5. 所有数据库角色：readAnyDatabase、readWriteAnyDatabase、userAdminAnyDatabase、dbAdminAnyDatabase
+6. 超级用户角色：root
+===========================
+admin 
+ >use admin
+>db.addUser(“root”, “root”)
+现在我们为mongodb的admin数据库添加一个用户root，密码也是root，mongodb可以为每个数据库都建立权限认证，也就是你可以指定某个用户可以登录到哪个数据库。上面的代码，我们为admin数据库添加了一个root用户，在mongodb中admin数据库是一个特别的数据库，这个数据库的用户，可以访问mongodb中的所有数据库
+===========================
+ 如果你要为test数据库，设置一个用户，使用如下命令：
+>use test
+>db.addUser(“test”, “test”)
+好了，现在我们已经为mongodb设置了一个全局用户root，接下来先重启mongodb，使创建的用户生效。
+===========================
+ system.user用户
+每个数据库的用户账号都是以文档形式存储在system.users集合里面的， 
+文档结构{'user':username, 'readOnly':true, 'pwd': password hash}。password hash是根据用户名和密码生成的散列。
+===========================
+查询某个数据库下的用户db.system.users.find(); 
+删除某个数据库下的所有用户db.system.users.remove()，删除指定用户db.system.users.remove({'user':'用户名'})

@@ -1,0 +1,19 @@
+============web SQL=============
+openDatabase：这个方法使用现有的数据库或者新建的数据库创建一个数据库对象。
+transaction：这个方法让我们能够控制一个事务，以及基于这种情况执行提交或者回滚。
+executeSql：这个方法用于执行实际的 SQL 查询。
+===============================
+var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+创建表
+var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+db.transaction(function (tx) {  
+   tx.executeSql('CREATE TABLE IF NOT EXISTS LOGS (id unique, log)');
+});
+插入数据
+var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+db.transaction(function (tx) {
+   tx.executeSql('CREATE TABLE IF NOT EXISTS LOGS (id unique, log)');
+   tx.executeSql('INSERT INTO LOGS (id, log) VALUES (1, "菜鸟教程")');
+   tx.executeSql('INSERT INTO LOGS (id, log) VALUES (2, "www.runoob.com")');
+});
+===============================

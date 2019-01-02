@@ -1,4 +1,4 @@
-﻿===========scrapyѧϰ========
+﻿===========scrapy========
 https://www.cnblogs.com/Undo-self-blog/category/1146467.html
 ==========python爬虫从入门到放弃====
 http://www.cnblogs.com/zhaof/tag/%E7%88%AC%E8%99%AB/

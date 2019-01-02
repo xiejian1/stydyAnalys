@@ -1,0 +1,37 @@
+sudo apt-get install python-virtualenv
+virtualenv py2
+cd py2
+cd bin
+启动虚拟环境：source activate
+deactivate
+virtualenv -p /usr/bin/pyhon3 py3
+cd py3
+cd bin
+source activate
+
+pip install virtualenvwrapper    ==virtualenv的管理工具，每次启动正常进行就可以
+查找virtualenvwrapper.sh脚本  sudo find / -name virtualenvwrapper.sh
+拷贝路径
+vi ~/.bashrc 最后一行添加
+export WORKON_HOME=$HOME/.virtualenvs
+source /路径
+保存文件：wq
+source ~/bashrc
+mkvirtualenv py2scrapy
+ls
+cd ~/.virtualenvs
+ls
+deactivate
+workon
+mkvirtualenv --python=/usr/bin/python3 py3scrapy
+python
+deactivate
+
+
+
+================windows下安装虚拟环境=================
+pip install virtualenv
+pip install virtualenvwrapper-win
+
+===创建虚拟环境
+mkvirtualenv --python=C:\Python27\python.exe py27

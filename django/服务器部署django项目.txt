@@ -1,0 +1,23 @@
+=================
+1、部署时设置ALLOWED_HOST = []
+2、使用scp 命令 上传源代码
+3、python manage.py runserver 0.0.0.0:8090
+4、uwsgi 线上部署Django 的服务器
+pip install uwsgi
+5、django程序使用uwsgi 
+uwsgi --http :9005 --chdir /data/oldboy/ --wsgi-file oldboy/wsgi.py --master --processes 4
+6、配置文件的形式启动uwsgi
+1. 创建配置文件 oldboy.ini
+[uwsgi]
+http = 0.0.0.0:9005
+chdir = /data/oldboy/
+wsgi-file = oldboy/wsgi.py
+processes = 4
+static-map = /static=/data/oldboy/allstatic
+
+2. 根据配置文件启动uwsgi
+
+uwsigi --ini  oldboy.ini
+
+设置uwsgi静态文件对应关系
+uwsgi --http :9005 --chdir /data/oldboy/ --wsgi-file oldboy/wsgi.py --master --processes 4 --static-map /static=/data/oldboy/allstatic

@@ -1,0 +1,3 @@
+=============
+数据挖掘经典算法
+https://github.com/fuqiuai/datamining_algorithms

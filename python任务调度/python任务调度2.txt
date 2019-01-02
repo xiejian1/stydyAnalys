@@ -1,0 +1,7 @@
+=============pythonrenwu 调度============
+启动命令
+celery flower -A tasks –port=8083
+或者
+两个进程分别执行celery -A tasks worker -l info和celery -A tasks flower –port=8083
+
+在脚本同级目录执行celery -A tasks worker -B，即启动worker和beat服务；或者先用celery -A proj worker –loglevel=INFO启动worker，再用celery -A tasks beat -s celerybeat-schedule #这里的celerybeat-schedule指定一个记录文件**启动beat服务也行。

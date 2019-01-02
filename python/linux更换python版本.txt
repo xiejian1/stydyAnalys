@@ -1,0 +1,22 @@
+=========linux 更换版本======
+1、软连接的方式进行
+rm -f /usr/bin/python
+ln -s /usr/bin/python3.6 /usr/bin/python
+PATH=/usr/bin:$PATH
+==========linux 下python虚拟环境======
+1、pip install virtualenv virtualenvwrapper  ==安装虚拟环境包
+2、设置环境变量
+export WORKEN_HOME=/software/venv
+source /usr/local/bin/virtualenvwrapper.sh
+
+3、mkvirtualenv 名称   ==创建虚拟环境
+4、lsvirtualenv  ==列出虚拟名称
+5、worken 名称  =切换名称
+6、指定python版本创建寻环境
+mkvirtualenv -p /usr/bin/python3.6 名称
+======激活虚拟环境======
+source /path..../activate
+=======退出虚拟环境====
+deactivate
+=======删除虚拟环境====
+rmvirtualenv 名称

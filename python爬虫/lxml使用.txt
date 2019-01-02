@@ -1,0 +1,5 @@
+===========lxml解析网页==============
+from lxml import etree
+
+data = etree.HTML(html)
+data.xpath('')[0]   ==得到内容

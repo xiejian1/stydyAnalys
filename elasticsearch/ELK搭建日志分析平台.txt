@@ -1,4 +1,5 @@
 ==========ELK搭建日志分析平台=======
+https://segmentfault.com/a/1190000010975383 ==分析平台
 一、所需的开发工具
 ElasticSearch : elasticsearch-5.5.2
 Logstash : logstash-5.5.2

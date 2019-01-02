@@ -1,0 +1,92 @@
+================rabbitMQ搭建===============
+Message （消息）：RabbitMQ 转发的二进制对象，包括Headers（头）、Properties （属性）和 Data （数据），其中数据部分不是必要的。Producer（生产者）： 
+消息的生产者，负责产生消息并把消息发到交换机
+
+Exhange的应用。
+
+    Consumer （消费者）：使用队列 Queue 从 Exchange 中获取消息的应用。
+    Exchange （交换机）：负责接收生产者的消息并把它转到到合适的队列
+
+    Queue （队列）：一个存储Exchange 发来的消息的缓冲，并将消息主动发送给Consumer，或者 Consumer 主动来获取消息。见 1.4 部分的描述。
+
+    Binding （绑定）：队列 和 交换机 之间的关系。Exchange 根据消息的属性和 Binding 的属性来转发消息。绑定的一个重要属性是 binding_key。
+
+    Connection （连接）和 Channel （通道）：生产者和消费者需要和 RabbitMQ 建立 TCP 连接。一些应用需要多个connection，为了节省TCP 连接，
+可以使用 Channel，它可以被认为是一种轻型的共享 TCP 连接的连接。连接需要用户认证，并且支持 TLS (SSL)。连接需要显式关闭
+
+================rabbitMQ方案一=============
+import pika   
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+    host='127.0.0.1', port=5672, ))     #定义连接池
+channel = connection.channel()          
+channel.queue_declare(queue='test')    #声明队列以向其发送消息消息
+channel.basic_publish(exchange='', routing_key='test', body='Hello World!')  #注意当未定义exchange时，routing_key需和queue的值保持一致
+print('send success msg to rabbitmq')
+connection.close()   #关闭连接
+
+import pika
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+    host='127.0.0.1', port=5672))
+channel = connection.channel()
+
+channel.queue_declare(queue='test')
+
+
+def callback(ch, method, properties, body):
+    '''回调函数,处理从rabbitmq中取出的消息'''
+    print(" [x] Received %r" % body)
+
+
+channel.basic_consume(callback,queue='test',no_ack=True)
+print(' [*] Waiting for messages. To exit press CTRL+C')
+channel.start_consuming()    #开始监听 接受消息
+=================rabbitMQ方案二==================
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# auth : pangguoping
+import pika
+# ######################### 生产者 #########################
+credentials = pika.PlainCredentials('admin', 'admin')
+#链接rabbit服务器（localhost是本机，如果是其他服务器请修改为ip地址）
+connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.1.103',5672,'/',credentials))
+#创建频道
+channel = connection.channel()
+# 声明消息队列，消息将在这个队列中进行传递。如果将消息发送到不存在的队列，rabbitmq将会自动清除这些消息。如果队列不存在，则创建
+channel.queue_declare(queue='hello')
+#exchange -- 它使我们能够确切地指定消息应该到哪个队列去。
+#向队列插入数值 routing_key是队列名 body是要插入的内容
+
+channel.basic_publish(exchange='',
+                  routing_key='hello',
+                  body='Hello World!')
+print("开始队列")
+#缓冲区已经flush而且消息已经确认发送到了RabbitMQ中，关闭链接
+connection.close()
+
+import pika
+credentials = pika.PlainCredentials('admin', 'admin')
+# 链接rabbit
+connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.1.103',5672,'/',credentials))
+# 创建频道
+channel = connection.channel()
+# 如果生产者没有运行创建队列，那么消费者创建队列
+channel.queue_declare(queue='hello')
+
+
+def callback(ch, method, properties, body):
+    print(" [x] Received %r" % body)
+    import time
+    time.sleep(10)
+    print
+    'ok'
+    ch.basic_ack(delivery_tag=method.delivery_tag)  # 主要使用此代码
+
+
+channel.basic_consume(callback,
+                      queue='hello',
+                      no_ack=False)
+
+print(' [*] Waiting for messages. To exit press CTRL+C')
+channel.start_consuming()
+二、

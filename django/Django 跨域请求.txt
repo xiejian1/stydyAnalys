@@ -1,0 +1,25 @@
+==================Django 跨域请求=======================
+注意这里的 frontend 是Vue.js项目目录，dist则是运行 npm run build 构建出的index.html与静态文件夹 static 的父级目录这时启动Django项目，
+访问 / 则可以访问index.html，但是还有问题，静态文件都是404错误，下一步我们解决这个问题
+
+一种是在Vue.js层上做转发（proxyTable），另一种是在Django层注入header，
+1、安装
+pip install django-cors-headers
+2、配置
+corsheaders.middleware.CorsMiddleware
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    **'corsheaders.middleware.CorsMiddleware',**
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+3、添加
+CORS_ORIGIN_ALLOW_ALL = True
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+python manage.py collectstatic
+STATIC_URL = '/static/'

@@ -1,0 +1,20 @@
+===================shell解析json数据=================
+如果 想利用 shell 从 json 数据 中 解析出某个字段， 可以 利用 正则匹配
+grep -Po '"spanId":".*?"' | grep -Po '\d+'
+ps aux|grep ynsourceenterpbid
+cut -d: -f4 json.txt | tr -cd '[0-9]\[a-z\]'
+jq '.jobid' json.txt |sed 's/\"//g'
+
+curl http://139.159.140.183:6880/schedule.json -d project=ynsourceenterpbid -d spider=ynsourceenterpbid >>json.txt
+
+===========shell 循环读取每一行数据============
+while read myline
+do
+ echo "LINE:"$myline
+done < datafile.txt
+===========shell 执行命令赋值给变量============
+1、反斜杠
+$var={`df -lh | grep Filesystem`}
+echo "${var}"
+2、用美元符和小括号将命令括起来
+变量=$(命令) 

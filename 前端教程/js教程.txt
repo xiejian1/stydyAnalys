@@ -1,0 +1,21 @@
+=================js教程===================
+1、windows对象
+window.open() ==打开新窗口
+window.close() ==关闭当前窗口
+window.moveTo() ==移动当前窗口
+window.resizeTo() ==调整当前窗口的尺寸
+===============window.location====
+1、location.hostsname  ==返回web主机的域名
+2、location.pathname ==返回当前文件的路径和文件名
+3、location.port ==返回web主机的端口
+4、location.url ==返回当前主机的url
+5、location.assign() ==加载新的文档
+========js计时=====
+1、setInterval() ==间隔指定的毫秒数，不停的执行指定的代码
+2、setTimeout() ==在指定的时间执行指定的代码
+3、clearInterval() ==停止执行代码
+4、clearTimeOut() ==停止执行
+5、document.cookie ==设置值
+========js监听事件=====
+1、addEventListner() ==添加监听事件
+2、removeEventListener() ==清楚事件
