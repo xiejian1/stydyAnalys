@@ -52,11 +52,129 @@ user_age[[3, 1]]
 ======Series量化操作=======
 Series 与 ndarray 一样，也是支持向量化操作的。同时也可以传递给大多数期望 ndarray 的 NumPy 方法。
 user_age + 1
+===============pandas读取excel多表操作===================
+一 读取excel文件
+import dandas as pd
+xlsx_file = d.ExcelFile('./comany.xlsx')
+sheet1 = xlsx_file.parse(0)
+二 文件保存到excel
+DataFrame(data).to_excel("abc.xlssx".sheet_name="123",index=False,header=False)
+三 pandas读取文件扩展
+常用的读取文件的方法
+函数	                                                描述
 
-==========DataFrame操作=============
+read_table(filepath_or_buffer[, sep, …])	读取普通分隔的数据
+
+read_csv(filepath_or_buffer[, sep, …])	读取csv格式的数据
+
+read_excel(io[, sheetname, header, …])	读取excel格式的数据
+
+read_json([path_or_buf, orient, typ, dtype, …])	读取json格式的数据
+
+read_html(io[, match, flavor, header, …])	读取html格式的 数据
+
+read_sql(sql, con[, index_col, …])	读取数据库中的数据
+
+四 dataFrame操作
+1）dataframe.drop(column='',axis=1,inplacce=True)  ===在原有的数据上进行删除
+2)  dataframe.drop(column='',axis=1) ===删除列的数据
+3)  dataframe.replace({'':'','':''})
+使用map()函数和lambda表达式原地替换
+df1['sex'].map(lambda x:1 if x=='female' else 0)
+使用map()加字典的形式进行替换
+df1['sex'].map({'female':1, 'male':0})
+使用loc类原地进行替换
+df1.loc[df['sex']=='female', 'sex'] = 1
+df1.loc[df['sex']=='male', 'sex'] = 0
+4）dataframe.ix[0].values  ==读取第一行的数据
+5) dataframe.ix[[1,2]].values ===读取第一行和第二行的数据 ，得到的数据是一个二维数组
+6) dataframe.ix[1,2] ===取得指定行列的数据
+7) dataframe.ix[[1,2],['title','data']].values  ==读取指定的多行多列的值
+8) dataframe.index.values  ==取出行号，并且打印输出
+9) dataframe.columns.values ==取出列好，并且打印输出
+10) dataframe.sample(3).values ==取出指定行数的值
+11) dataframe['columns'].values ==取出指定列的值
+
+===============pandas修改数据========
+dandas主要有两个数据结构 Series和DataFrame，其中Series(相当于一行或者一列的数据结构)，DataFrame(相当于多行或者多列的表结构)
+1) Series数据结构，更改索引 data = Series([],index=[])
+                                           data.reindex([])
+2) DataFrame数据结构 ，由多行和多列组成的数据结构
+更改行索引的方式 dataframe.reindex(index=[]),更改列索引的方式 dataframe.reindex(columns=[])
+3) 丢弃指定轴上的列 
+data.drop(['a','c'])  相当于 delete table a where xid='a' and ixd='c' ===删除指定的行
+data.drop('m1',axis=1)  相当于  delete table a where yid='m1' ==删除指定的列
+4) 选取和过滤  ,在python中，因为有行列索引，因此在进行数据查询的时候，会非常的方便
+Series 数结构 (1 按照行进行索引 data = Series([],index=[])
+                                                data['a']  ==相当于 select * from tb where xid='b'
+                                                data['a','b','c']  ==相当于 select * from tb where xid in ('a','b','c')
+                                                data[0:1]和data['a':'b']  前者不包含末端，后者包含末端
+                                                data[data>0.6] ==相当于在数据中查找，比0.6大的值
+                     (2 pd.Series(a,name='')
+                     (3 pd[pd>40]
+                     (4 利用函数 Serise + - * /
+                     (5 字典操作
+                     (6 元素检查 in 
+Series 数据结构函数
+(1 求和 .sum()
+(2 求平均值 .mean()
+(3 计数 .count()
+(4 替换缺失值 .fillna(new_value)
+(5 求中位数 .median()
+DataFrame
+                    1) 选择单行数据  ix和xs  data.ix[1] 或者data.ix['b'] 或者 data.xs('b')
+                    2) 选择多行数据  data[0:2] 或者 data.ix[['a','b']] 
+                    3) 选择单列的数据 data['m1'] 或者 data.ix['m1',axis=1] 或者data.ix[:,'m1']
+                    4）选择多列数据 data.ix[['m1','m2']] 或者data.ix[:,['m1','m3']]
+                    5) 根据值的大小条件筛选行或者列 data['m1']>4 ===相当于select * from tb where m1>4
+                    6) data[data['m1']>4]  ==筛选出某一列的值大于4的行数据
+                    7) data.ix[data[''m1]>4,[0,2]]
+补充：获取行列的值 .loc()  ()内先行后列
+1) data.loc[[1],[]]    ==
+data.loc[id,['','','']]
+2) data.iloc[0,1]  ==使用数组的形式来进行数据的查询
+3) data.iloc[1:10,2:9].values 
+
+4)在.loc中设置值  data.loc[data['id'] > 2000, "first_name"] = "John"  ==找到某一行，列的值进行修改 
+
+扩展:
+获取列的数据
+(1 data.column_name ===使用点符号获取列的数据
+(2 data['column_name']  ==使用方括号和列名作为字符串
+(3 data.iloc[:,<column_name>] ==使用数字索引和iloc选择器
+获取多列的语法
+data[['column1','column2']]
+data.iloc[:,[1,3,4,6]]
+
+获取行的数据
+(1 通常使用iloc/loc 选择方式或使用逻辑选择器（基于另一列或者变量的值进行选择）来选择DataFrame中的行
+data.iloc[1:10,:]  == 使用iloc选择器进行数字选择
+data.loc[2,:]  ==使用loc选择器进行基于标签的的行选择
+data[data["column"] =="name"] ==选择列值为name的行
+
+删除行和列
+(1   data.drop("column_name",axis=1)  ==删除一列，使用列名，drop函数返回的十一个新的DataFrame，并且删除了列，如果需要编辑原始的DataFrame，可以将inplace参数设置为True,没有返回值
+(2 data.drop(column="name") 
+(3 data.drop("",axis=1,inplace=True)
+(4 data.drop(["","",""],axis=1)
+
+(5 删除行 指定axis=0
+data.drop([],axis=0)
+data.drop([],axis=0,inplace=True)
+data.iloc(5,:)
+
+重命名列
+(1 data=data.rename(column={"old_name":"new_name"})'
+(2 data = data.rename(column={"old_name":"new_name"},inplace=True)
+
+数据的分组与聚合
+data.groupby()
+=========DataFrame操作=============
 DataFrame 是一个带有索引的二维数据结构，每列可以有自己的名字，并且可以有不同的数据类型。
 你可以把它想象成一个 excel 表格或者数据库中的一张表，DataFrame 是最常用的 Pandas 对象。
 可以构建一个 dict，key 是需要存储的信息，value 是信息列表。然后将 dict 传递给 data 参数。
+
+
 ==========DataFrame操作======
 index = pd.Index(data=["Tom", "Bob", "Mary", "James"], name="name")
 data = {
@@ -95,3 +213,18 @@ user_info["sex"] = ["male", "male", "female", "male"]
 data.pop("sex")
 如果想要保证原有的 DataFrame 不改变的话，我们可以通过 assign 方法来创建新的一列。
 user_info.assign(age_add_one = user_info["age"] + 1)
+
+一  dataframe 适用的场景
+(1 学校系统
+(2 经济学数据框架
+(3 电子商务系统或商城中
+
+=======================pandas 读写excel==================
+import pandas as pd
+name = pd.ExcelFile('file')
+===显示出读入excel文件中的表名字
+table = xls_file.parse()
+
+数据写入 excel表格中
+DataFrame(data).to_excel("abc.xlsx",sheet_name="123",index=False,header=True)
+

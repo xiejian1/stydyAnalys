@@ -1,0 +1,22 @@
+==========spark安装教程========
+1、spark 的安装依赖于scala所以，在安装spark之前，先安装scala
+tar -zxvf scala 
+2、配置环境变量
+vim /etc/profiel
+export SCALA_HOME=
+export PATH=:PATH:$SCALA_HOME/bin
+3、解压安装spark
+tar -axvf spark
+vim /etc/profile
+export SPARK_HOME=
+export PATH=PATH:$SPARK_HOME/bin
+4、进入spark解压目录的conf目录 
+编辑 spark-env.sh文件
+添加 JAVA_HOME
+       SCALA_HOME
+       HADOOP_HOME
+       HAPDOOP_CONF
+       SPARK_HOME
+       
+5、编辑sprk-default.conf
+编辑一些spark 配置

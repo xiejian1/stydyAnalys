@@ -187,3 +187,50 @@ export JAVA_HOME=/opt/java_environment/jdk1.7.0_80（jdk安装路径）
 1、安装HBase 配置环境变量
 2、配置 hbase-site.xml文件
 3、配置hbase-env.sh文件
+一、HBase是一个分布式的，面向列的开源数据库，一个结构化数据的分布式存储系统。
+二、适合于非结构化数据存储的数据库
+三、、与mysql相比是基于列存储的，而非基于行存储的数据库
+1)解压hbase文件
+tar -zxvf hbase......
+2）配置环境变量
+vim 、etc/profile
+export HBASE_HOME=/home/bearning/hbase/hbase-1.4.0
+PATH=$PATH:
+3）在hbase解压文件下进入conf目录，编辑hbase-env.sh
+增加配置：
+export JAVA_HOME=
+export HADOOP_HOME=
+export HABSE_HOME=
+export HABSE_CLASSPATH=
+export HABE_PID_DIR=
+export HABSE_MANAGES_ZK=
+4）编辑该文件夹下的hbase-site.xml文件
+
+hbase的相关操作
+1、创建一个多列簇的表
+create 'user','userid','account','info','address'
+2、添加数据
+put 'user','zhangsan','userid:id','201413070402'
+put 'user','zhangsan','account:name','xieqiang'
+put 'user','zhangsan','account:password','123456'
+put 'user','zhangsan','account:idcard','1234567890086'
+3、扫描表中所有的数据
+scan‘table’
+--其中可以添加一些过滤条件进行相应的修改
+4、获取表中的数据
+get 'user','zhangsan' --column,'fields','value'
+5、删除表中的某个子弹
+delete 'user','zhangsan','account:name'
+6、清空表中的所有的数据
+truncate 'user'
+
+============python 操作thrift
+python3安装操作hbase所需要的依赖参考博客，
+https://blog.csdn.net/luanpeng825485697/article/details/81048468
+内部讲的很详细。操作即可
+
+============hadoop整合hbase
+一、将hbase 的root目录修改成hdfs上的文件夹
+二、添加hbase.cluster.distributed属性。
+三、修改HBASE_CLASSPATH 为hadoop的/etc/hadoop路径
+四、安装zookeeper

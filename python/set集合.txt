@@ -1,0 +1,12 @@
+===========set函数======
+一 两个集合之间的运算
+set(a)
+x =set(b)
+方法
+x.add()
+x.upate()
+x.remove()
+x.discard()
+x.pop()
+len(b)  =长度
+x.clear()  =清空
