@@ -1,0 +1,90 @@
+=========pandas查看数据========
+一  查看头尾的行数据
+df.head()   df.tail(5)
+二 显示索引、列、底层的数据
+df.index  ==索引
+df.columns ==列
+df.values  ==底层的数据
+
+三 统计
+df.shape ==查看数据框的行数和列数
+df.info() ==查看数据行的索，数据类型，以及内存信息
+df.count()  ==统计每一列非空个数
+df.A.nunique() ==统计某个列有多少个不同的类
+len(set(df.A))
+df.A.value_counts() ==统计某列不同的类对应的个数
+df.describe()  ==对于数据类型为数值型的列，查询其描述性统计的内容
+df.corr()  ==统计相关系数
+
+四 置换
+df.T
+
+
+五 按轴排序
+df.sort_index(0)  ==按行名排序
+df.sort_index(1)  ==按列名排序
+
+六 按值排序
+df.sort_values(by='values',axis=1)  ==按行的值进行排序
+df.sort_values(['A','B'],ascending=False)  ==按顺序进行多列降序
+df.sort_values(by='B') == 安列进行排序
+
+七 查看最大值的索引
+df.idxmax(0)  ==显示所有列最大值所对应的索引
+df.A.idxmax(0)  ==显示A列中最大值对应的索引
+
+八 格式化输出 format
+格式限定符"{}"
+print('{}:.2%'.format(0.12345))    ==12.345%
+print('{:,}'.format(123456789))  ==123,456,789
+print('{:.2f}'.format(31.31412))  ==31.31
+
+九 选择
+1、直接选取数据
+df['A']  ==用于获取整行或者整列的数据
+2、选择两列
+df[['A','B']]
+3、通过切片获取行数据
+df[0:3]
+4、通过标签进行选择  .loc[]
+标签的优点是可以多轴交叉选择
+df.loc[dates[0]]
+(1 位置加标签  df.loc[:,['A','B']]  
+(2 标签加标签  df.loc['name','A'] 
+5、通过位置进行选择 .iloc[:,:]
+df.iloc[3]  ==通过传递数值进行位置选择，选择单行的时候
+df.iloc[:,:-3]  ==选取除了最后三列之外的数据
+df.iloc[1:3,1:3]  ==通过数值进行切片，位置加位置
+df.iloc[[1,3],[1,3]]  ==通过制定一个位置的列表
+df.iloc[1,3]   ==获取特定的值
+df[df.A>0]  ==布尔索引,使用一个单独列的值来选择数据
+df[df>0]  
+
+df[df.A.str.startswith('a')]  ==选取A列值中以A开头的行
+df[df.E.isin(['1','2'])]   =使用isin() 来进行过滤
+
+十 赋值
+(1 通过标签设置新的值
+df.loc['row','column'] = 1
+(2 通过位置设置新的值
+df.iloc[0,0] = 2
+(3 设置整列的值
+df.loc[:,'D'] = np.array([3]*len(df))
+
+十一 通过bool索引赋值
+df2 = df.copy()
+df2[df2>0] = -df2
+
+
+十二 缺失值处理
+(1 删除列的方法
+(2  去掉包含缺失值的行，不包含原来的值
+(3 对缺失值进行处理
+(4 对数据进行bool填充
+
+1 df.isnull().sum()  ==查看每一行有多少缺失值
+2 df.shape[0] - df.isnull().sum()   ==统计每一列有多少完整的值
+
+删除列的办法 
+df.drop(df.columns[4],axis=1,inplace=True) ==不知道列名的时候
+df.drop('E',axis=1,inplace=True)  ==根据列名删除

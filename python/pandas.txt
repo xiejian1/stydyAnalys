@@ -151,6 +151,7 @@ data.iloc[:,[1,3,4,6]]
 data.iloc[1:10,:]  == 使用iloc选择器进行数字选择
 data.loc[2,:]  ==使用loc选择器进行基于标签的的行选择
 data[data["column"] =="name"] ==选择列值为name的行
+data.loc[1:5,:] ==获取多行的数据
 
 删除行和列
 (1   data.drop("column_name",axis=1)  ==删除一列，使用列名，drop函数返回的十一个新的DataFrame，并且删除了列，如果需要编辑原始的DataFrame，可以将inplace参数设置为True,没有返回值
@@ -169,6 +170,16 @@ data.iloc(5,:)
 
 数据的分组与聚合
 data.groupby()
+
+条件筛选 
+(1 普通条件筛选
+data.loc[:,'a']>2  ==首先做了一个判断，然后在进行筛选
+data.loc[data.loc[:,'a'] >2]  
+(2 条件筛选逻辑运算符
+| for or, & for and,and ~ for not 
+(3 isin()  ==非索引列使用 在索引列中使用
+(4 any()/all()  在多列索引时 
+
 =========DataFrame操作=============
 DataFrame 是一个带有索引的二维数据结构，每列可以有自己的名字，并且可以有不同的数据类型。
 你可以把它想象成一个 excel 表格或者数据库中的一张表，DataFrame 是最常用的 Pandas 对象。
