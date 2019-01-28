@@ -146,3 +146,30 @@ pd.merge(left,right,on='key',how='left') ==左连接left、右连接right，外链接outer 
 Append 将一行连接到一个DataFrame上
 专门用于上下按照同列名连接--类似于SQL中union
 df.append(s,ignore_index=True)s
+
+十五 分组和分段
+(1 分组(对数据进行汇总统计，类似于数据透视表)
+(2 通过多个列进行分组形成一个层次索引
+(3 分段(对数据进行分段或者分箱切割，可用于连续变量的特征处理)
+
+分组，并对每个分组执行sum/count/mean/median(中位数等函数)
+df.groupby('A').sum
+df.groupby('A').agg(np.sum)
+df.groupby('A').agg({'C':sum,'D':sum})
+
+分组求平均值、最大值、最小值
+df.groupby('A').C.agg(['mean','max','min'])
+按A类中的个数对C求平均值
+df.groupby('A').agg({'C':sum})['C'].mean()
+
+通过多个列进行分组形成一个层次索引
+df.groupby(['A','B']).sum()
+
+分段
+pd.qcut()与pd.cut
+按变量取值范围进行均匀分割cut
+cut11 = pd.cut(df1['name'],5)
+
+按变量个数进行均匀分割qcut
+cut11 = pd.qcut(df1[''],4)
+cut11 = pd.qcut(df1[''],4,labels=False)
