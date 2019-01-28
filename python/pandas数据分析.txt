@@ -88,3 +88,61 @@ df2[df2>0] = -df2
 删除列的办法 
 df.drop(df.columns[4],axis=1,inplace=True) ==不知道列名的时候
 df.drop('E',axis=1,inplace=True)  ==根据列名删除
+
+del df['E']
+
+删除行的办法
+df.dropna()  ==不返回df还是原值
+df.dropna(how='all')  ==删除所有均为空值的行
+df.dropna(inplace=True)  ==返回删除后的
+
+df.dropna(axis=1)  ==删除包含空值的列
+
+
+缺失值进行填充
+df.fillna(value=5,inplace=True)  ==对处理的值进行保存
+df.fillna(df.mean())  ==将所有空值替换为平均值
+df.fillna(df)  ==读数据进行bool值的填充
+
+十三  相关操作
+(1 统计行列平均值
+(2 Apply 对数据应用函数
+(3 计数value_counts()
+(4 字符串大小写转换
+(5 数据类型转换
+(6 替换 
+
+df.mean()  ==按列统计平均
+round(df.mean())  ==对平均取整
+df.mean(1)  ==按行统计平均
+df.apply(lamda x:x.max()-x.min())  ==对数据应用函数
+df.apply(np.mean)  ==按行统计
+df.apply(np.max,axis=1)   ==
+
+s.value_counts()  ==计数
+df.E.value_counts()  ==查看某一列类别数据各类的个数
+df.apply(pd.Series.value_counts())  ==查看某一列的各类统计个数
+
+s=dp.Series()
+s.str.lower()  ==字符串大小写转换
+
+df.astype(float)  ==将Dataframe的格式转换为浮点数
+
+df.replace(4,'one')  ==值的替换
+
+
+十四 合并
+(1  concat(不通过键值之间的连接)
+(2 merge 类似于SQL类型的连接(join)
+(3 Append  类似于SQL中union
+
+concat(默认上下连接，axis=1时左右连接)
+
+merge 类似于SQL类型的连接(join)
+根据键连接，merge需要根据某一共同的行或列来进行合并
+pd.merge(left,right,on='key')
+pd.merge(left,right,on='key',how='left') ==左连接left、右连接right，外链接outer ,默认情况下是inner
+
+Append 将一行连接到一个DataFrame上
+专门用于上下按照同列名连接--类似于SQL中union
+df.append(s,ignore_index=True)s
