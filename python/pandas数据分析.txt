@@ -154,13 +154,16 @@ df.append(s,ignore_index=True)s
 
 分组，并对每个分组执行sum/count/mean/median(中位数等函数)
 df.groupby('A').sum
+===聚合函数
 df.groupby('A').agg(np.sum)
 df.groupby('A').agg({'C':sum,'D':sum})
-
+df.groupby('key').value
 分组求平均值、最大值、最小值
 df.groupby('A').C.agg(['mean','max','min'])
 按A类中的个数对C求平均值
 df.groupby('A').agg({'C':sum})['C'].mean()
+
+数据的转换transform(function())  lambda x:x.mean() ==平均值
 
 通过多个列进行分组形成一个层次索引
 df.groupby(['A','B']).sum()
@@ -173,3 +176,55 @@ cut11 = pd.cut(df1['name'],5)
 按变量个数进行均匀分割qcut
 cut11 = pd.qcut(df1[''],4)
 cut11 = pd.qcut(df1[''],4,labels=False)
+
+十六 轴转换和数据透视表
+(1 Stack 堆栈
+(2 数据透视表
+
+1、Stack堆栈
+stacked = df.stack()
+stacked
+
+stacked2 = stacked.unstack()
+stacked2 
+
+stacked3 = stacked.unstack(0)
+stacked3
+
+stacked4 = stacked.unstack(1)
+stacked4
+
+十七 数据透视表
+pd.pivot_table()
+pd.pivot_table(df,values='D',index['A','B'],columns='C')
+pd.pivot_table(df,index=['A','B'],columns=['C'],aggfunc=np.sum)
+
+十八 时间序列
+(1 针对时间频率重采样
+(2 时间类型转换
+(3 时间采样分组
+(4 时间筛选问题
+
+1 针对时间频率重采样
+首先创建一个采样的时间序列
+pd.date_range('time',periods=61,freq='s')
+
+序列或者索引为时间时，可以使用.resample()重置采样评率
+将int64 型数据转换为datetime 数据
+crime.info()
+crime.head()
+
+按时间采样结果分组
+进行时间分组求和，可以使用重采样
+crimes = crime.resample('10AS').sum()
+
+时间筛选问题
+通过创建时间分列字段，进行采样统计计算
+
+按月进行筛选
+date.query('day==1')
+按年进行筛选
+date.query('year==1 and month=1')
+
+时间差，两个日期之间可以想见，并求对应月数和天数
+(date.max()-date.min()).days()
