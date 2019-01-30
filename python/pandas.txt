@@ -115,12 +115,19 @@ Series 数结构 (1 按照行进行索引 data = Series([],index=[])
                      (4 利用函数 Serise + - * /
                      (5 字典操作
                      (6 元素检查 in 
+
 Series 数据结构函数
 (1 求和 .sum()
 (2 求平均值 .mean()
 (3 计数 .count()
 (4 替换缺失值 .fillna(new_value)
 (5 求中位数 .median()
+
+注意：
+(1 Series 添加数据
+data.append(Series(['a']))
+(2 Series 删除数据
+data.drop(0)或者data.drop('row_name')
 DataFrame
                     1) 选择单行数据  ix和xs  data.ix[1] 或者data.ix['b'] 或者 data.xs('b')
                     2) 选择多行数据  data[0:2] 或者 data.ix[['a','b']] 
