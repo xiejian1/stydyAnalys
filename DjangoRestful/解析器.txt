@@ -1,0 +1,24 @@
+一、解析器
+-->根据contenttype的不同解析成不同的解析器，解析出的字典是字典或者QueryDict
+rest framework 中的request.data都帮我们解析成字典
+from rest_framework.parsers import JSONParser,FormParser,MultiPartParser,FileUploadParser
+#默认使用前三个解析器
+# 在视图类中添加 parser_classes = [JSONPaser,] #如果只写这一个，意味着只能解析JSON数据  FormParser解析urlencode数据
+
+二、渲染器
+--> from rest_framework.renderers import JSONRenderer,BrowsableAPIRenderer
+#在视图类中添加 renderer_classes = [JSONRenderer,]
+
+三、分页
+from rest_framework.pagination import PageNumberPagination
+class MyPageNumberPagination(PageNumberPagination):
+    page_size = 2  # 每页显示多少条数据
+    page_query_param = "page"  # URL中输入的 page=2
+    page_size_query_param = "size"  # 临时浏览器中使用127.0.0.1:8000/books/?page=2&size=2 第二页显示两条数据
+    max_page_size = 3  # 上面的size最大值，不能无限制显示10000条数据
+
+# # ******第三种分页   *********
+from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
+class MyLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 1 #每页显示多少条数据
+
